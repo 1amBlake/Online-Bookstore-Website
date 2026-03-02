@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "id": 0,
+            "username": "",
+            "password": "",
+            "email": "",
+            "fullname": "",
+            "address": "",
+            "phone": "",
+            "is_admin": true
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "books": [
+        {
+            "id": 0,
+            "title": "",
+            "author": "",
+            "price": 0,
+            "description": "",
+            "genre_id": 0,
+            "publisher": "",
+            "published_year": 0,
+            "image": "",
+            "stock": 0
+        }
+    ]
+}
+
