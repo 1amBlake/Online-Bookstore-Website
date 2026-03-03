@@ -1,0 +1,18 @@
+[
+    {
+        "id": 0,
+        "title": "",
+        "originalTitle": "",
+        "author": "",
+        "genreId": 0,
+        "pages": 0,
+        "dimensions": "",
+        "description": "",
+        "publisher": "",
+        "publicationYear": "",
+        "translator": [""],
+        "price": 0,
+        "stock": 0,
+        "image": "../img/books/"
+    }
+]
