@@ -1,0 +1,51 @@
+[
+    {
+        "id": 1,
+        "title": "Đắc Nhân Tâm",
+        "originalTitle": "How to Win Friends and Influence People",
+        "author": "Dale Carnegie",
+        "genreId": 1,
+        "pages": 321,
+        "dimensions": "20.5 x 15 cm",
+        "description": "\"Đắc Nhân Tâm\" (How to Win Friends and Influence People) của Dale Carnegie là cuốn sách self-help kinh điển về nghệ thuật giao tiếp, ứng xử và thu phục lòng người, xuất bản lần đầu năm 1936. Sách cung cấp các nguyên tắc vàng để xây dựng mối quan hệ bền vững, thấu hiểu tâm lý, giúp người đọc thành công và hạnh phúc hơn.",
+        "publisher": "Nhà Xuất Bản Trẻ",
+        "publicationYear": "2008",
+        "translator": ["Nguyễn Văn Phước và các dịch giả khác"],
+        "price": 100000,
+        "stock": 40,
+        "image": "../img/books/bid_1.jpg"
+    },
+
+    {
+        "id": 2,
+        "title": "Elon Musk Intl: Tesla, Spacex, and the Quest for a Fantastic Future",
+        "originalTitle": null,
+        "author": "Ashlee Vance",
+        "genreId": 2,
+        "pages": 400,
+        "dimensions": "10.6 x 17.1 cm",
+        "description": "\"Elon Musk Intl: Tesla, SpaceX, and the Quest for a Fantastic Future\" (tựa Việt: Elon Musk - Tesla, SpaceX và Sứ Mệnh Tìm Kiếm Một Tương Lai Ngoài Sức Tưởng Tượng) là cuốn tiểu sử nổi tiếng của Ashlee Vance, khắc họa chân dung chi tiết về doanh nhân táo bạo nhất Thung lũng Silicon. Sách kể về hành trình từ tuổi thơ Nam Phi đến đỉnh cao công nghệ với Tesla và SpaceX",
+        "publisher": "HarperCollins",
+        "publicationYear": "2016",
+        "translator": null,
+        "price": 250000,
+        "stock": 4,
+        "image": "../img/books/bid_2.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Thỏ Bảy Màu Và Những Người Nghĩ Nó Là Bạn",
+        "originalTitle": null,
+        "author": "Huỳnh Thái Ngọc",
+        "genreId": 3,
+        "pages": 160,
+        "dimensions": "19 x 13 cm",
+        "description": "\"Thỏ Bảy Màu Và Những Người Nghĩ Nó Là Bạn\"là cuốn sách đầu tay của tác giả Huỳnh Thái Ngọc, ra mắt lần đầu vào năm 2015. Đây là ấn phẩm đánh dấu bước ngoặt đưa nhân vật Thỏ Bảy Màu từ một hiện tượng mạng trở thành biểu tượng văn hóa đại chúng tại Việt Nam",
+        "publisher": "Công Ty Cổ Phần Time Books",
+        "publicationYear": "2023",
+        "translator": null,
+        "price": 99000,
+        "stock": 77,
+        "image": "../img/books/bid_3.jpg"
+    }
+]
