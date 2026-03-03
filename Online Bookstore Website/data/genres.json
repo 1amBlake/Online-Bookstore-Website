@@ -11,5 +11,37 @@
     {
         "id": 3,
         "name": "Truyện tranh"
+    },
+    {
+        "id": 4,
+        "name": "Kinh tế"
+    },
+    {
+        "id": 5,
+        "name": "Văn học"
+    },
+    {
+        "id": 6,
+        "name": "Tâm lý học"
+    },
+    {
+        "id": 7,
+        "name": "Thiếu nhi"
+    },
+    {
+        "id": 8,
+        "name": "Ngoại ngữ"
+    },
+    {
+        "id": 8,
+        "name": "Khoa học"
+    },
+    {
+        "id": 9,
+        "name": "Lịch sử"
+    },
+    {
+        "id": 10,
+        "name": "Chính trị"
     }
 ]

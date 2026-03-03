@@ -1,0 +1,22 @@
+[
+    {
+        "id": 0,
+        "name": "Admin1",
+        "username": "admin",
+        "password": "admin123",
+        "email": null,
+        "address": null,
+        "phone": null,
+        "isAdmin": true
+    },
+    {
+        "id": 1,
+        "name": "Vũ Minh Trí",
+        "username": "tridepzai",
+        "password": "tri123",
+        "email": "vmt123@example.com",
+        "address": "123 Street, City",
+        "phone": "0123456789",
+        "isAdmin": false
+    }
+]
