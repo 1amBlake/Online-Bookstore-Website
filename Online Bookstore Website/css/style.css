@@ -1,0 +1,306 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Đặt biến màu để sau này cô giáo thích màu khác thì đổi 1 chỗ là xong */
+:root {
+    --primary-color: #27ae60;
+    --text-color: #333;
+    --bg-light: #f9f9f9;
+}
+
+body {
+    color: var(--text-color);
+}
+
+/* --- Xử lý thanh Navbar --- */
+.navbar {
+    display: flex; /* Dùng flex để dàn hàng ngang */
+    justify-content: space-between; /* Đẩy logo sang trái, icon sang phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 15px 50px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ cho đẹp */
+    position: sticky; /* Ghim menu ở trên cùng khi cuộn chuột */
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.logo span {
+    color: var(--primary-color);
+}
+
+/* Cái menu chữ ở giữa */
+.menu {
+    display: flex;
+    list-style: none;
+    gap: 30px; /* Cú pháp thần thánh của Flexbox để tạo khoảng cách */
+}
+
+.menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.menu a:hover {
+    color: var(--primary-color);
+}
+
+/* Mấy cái icon góc phải */
+.icons a {
+    margin-left: 20px;
+    color: var(--text-color);
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.icons a:hover {
+    color: var(--primary-color);
+}
+
+/* --- Xử lý khối Banner --- */
+.banner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px;
+    background-color: var(--bg-light);
+    min-height: 60vh;
+}
+
+.banner-content {
+    max-width: 500px;
+}
+
+.banner-content h1 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.banner-content p {
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.banner-img img {
+    max-width: 400px;
+}
+
+/* --- Style cho các nút bấm --- */
+.btn-primary {
+    padding: 12px 25px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background-color: #219150;
+}
+
+.btn-outline {
+    padding: 8px 15px;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.btn-outline:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* --- Xử lý khối hiển thị Sách --- */
+.book-section {
+    padding: 50px 10%;
+    text-align: center;
+}
+
+.section-title {
+    margin-bottom: 40px;
+    font-size: 28px;
+    text-transform: uppercase;
+}
+
+.book-grid {
+    display: flex;
+    flex-wrap: wrap; /* Nếu màn hình nhỏ không đủ chỗ, tự động rớt sách xuống dòng */
+    justify-content: center;
+    gap: 25px;
+}
+
+/* Khung bọc từng cuốn sách */
+.book-card {
+    width: 250px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s; /* Hiệu ứng di chuột mượt */
+}
+
+.book-card:hover {
+    transform: translateY(-10px); /* Đưa chuột vào thì cục sách nảy nhẹ lên */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.book-card img {
+    height: 180px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.book-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.book-card .price {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* --- Footer --- */
+.footer {
+    background-color: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 30px;
+    margin-top: 50px;
+}
+
+.footer p {
+    margin-bottom: 10px;
+}
+
+/* --- Responsive (Ép layout chạy ngon trên điện thoại) --- */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .menu {
+        margin: 15px 0;
+    }
+    .banner {
+        flex-direction: column;
+        text-align: center;
+    }
+    .banner-content {
+        margin-bottom: 30px;
+    }
+}
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--bg-light);
+}
+
+/* Cái hộp trắng chứa form */
+.login-container {
+    background-color: #fff;
+    width: 400px;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Chia khoảng cách cho các ô nhập liệu */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+/* Đổi màu viền khi click chuột vào ô nhập */
+.input-group input:focus {
+    border-color: var(--primary-color);
+}
+
+/* Phóng to nút bấm ra 100% chiều rộng */
+.btn-block {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.login-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+.back-home {
+    display: block;
+    margin-top: 15px;
+    color: #666 !important;
+    font-weight: normal !important;
+}
+
+.back-home:hover {
+    color: var(--primary-color) !important;
+}

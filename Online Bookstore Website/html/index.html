@@ -3,9 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Trang chủ | Website Bán Sách Nhóm 2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    
+
+    <header class="navbar">
+        <a href="index.html" class="logo"><i class="fas fa-book"></i> Nha<span>Sach</span></a>
+        
+        <ul class="menu">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="#featured">Sách nổi bật</a></li>
+            <li><a href="#new-arrivals">Sách mới</a></li>
+        </ul>
+
+        <div class="icons">
+            <a href="#" class="fas fa-search"></a>
+            <a href="#" class="fas fa-shopping-cart"></a>
+            <a href="login.html" class="fas fa-user" title="Đăng nhập"></a>
+        </div>
+    </header>
+
+    <section class="banner">
+        <div class="banner-content">
+            <h1>Khám phá kho tàng tri thức</h1>
+            <p>Hàng ngàn tựa sách hấp dẫn đang chờ bạn. Bắt đầu hành trình đọc sách ngay hôm nay!</p>
+            <button class="btn-primary">Mua ngay</button>
+        </div>
+        <div class="banner-img">
+            <img src="../image/banner1.jpg" alt="Banner Sách">
+        </div>
+    </section>
+
+    <section id="featured" class="book-section">
+        <h2 class="section-title">Sách Nổi Bật</h2>
+        
+        <div class="book-grid">
+            <div class="book-card">
+                <img src="../image/sach1.png" alt="Sách 1">
+                <h3>Stop overthinking - Sống tự do, không âu lo</h3>
+                <p class="price">120.000đ</p>
+                <button class="btn-outline">Thêm vào giỏ</button>
+            </div>
+
+            <div class="book-card">
+                <img src="../image/sach2.webp" alt="Sách 2">
+                <h3>Hồ Điệp và Kình Ngư</h3>
+                <p class="price">85.000đ</p>
+                <button class="btn-outline">Thêm vào giỏ</button>
+            </div>
+
+            <div class="book-card">
+                <img src="../image/sach3.webp" alt="Sách 3">
+                <h3>Đi tìm lẽ sống</h3>
+                <p class="price">150.000đ</p>
+                <button class="btn-outline">Thêm vào giỏ</button>
+            </div>
+
+            <div class="book-card">
+                <img src="../image/sach4.webp" alt="Sách 4">
+                <h3>Hoàng tử bé</h3>
+                <p class="price">200.000đ</p>
+                <button class="btn-outline">Thêm vào giỏ</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Đồ án Hệ Thống Công Nghệ Web</p>
+        <p>Thành viên: Huy (Nhóm trưởng) | Đạt | Tâm | Trí | Triều</p>
+    </footer>
 </body>
 </html>
