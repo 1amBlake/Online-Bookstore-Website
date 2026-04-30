@@ -61,6 +61,178 @@
     </header>
 
     <main>
+      <!--Thanh điều hướng Trang chủ / Giới thiệu-->
+      <section class="breadcrumb-section"><!--Màu nền của thanh điều hướng-->
+        <div class="container"><!--Giúp chữ căn giữa (căn chỉnh)-->
+          <nav
+            aria-label="breadcrumb"><!--Đây là thanh điều hướng, còn thuộc tính breadcrumb giúp phần mềm biết đây là thanh điều hướng-->
+            <ol
+              class="breadcrumb mb-0"><!--breadcrumb là class giúp thêm dấu gạch chéo ở giữa-->
+              <li class="breadcrumb-item"><a href="index.html">Trang
+                  chủ</a></li><!--xếp ngang và xóa dấu chấm ở đầu-->
+              <li class="breadcrumb-item active" aria-current="page">Giới
+                thiệu</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <!--Phần giới thiệu về web-->
+      <section class="py-5">
+        <div class="container">
+          <div
+            class="row align-items-center g-5"><!--ép đoạn chữ nằm ở vị trí chính giữa (theo chiều dọc) so với tấm ảnh.-->
+            <div class="col-lg-6">
+              <h2 class="fw-bold mb-4">Về <span
+                  class="text-primary-custom">HDTTT Bookstore</span></h2>
+              <p class="text-muted">
+                HDTTT Bookstore ra đời với sứ mệnh mang nguồn tri thức vô tận
+                đến gần hơn với độc giả. Chúng tôi tự hào là nền tảng cung cấp
+                các đầu sách đa dạng từ Văn học, Khoa học, đến Kỹ năng sống với
+                chất lượng phục vụ tốt nhất.
+              </p>
+              <p class="text-muted">
+                Dự án này được xây dựng và phát triển như một bài tập lớn tâm
+                huyết cho môn học Hệ Thống Công Nghệ Web, áp dụng các kỹ thuật
+                HTML, CSS, JavaScript và Bootstrap hiện đại.
+              </p>
+              <a href="products.html"
+                class="btn btn-primary rounded-pill px-4 py-2 mt-3 fw-bold">Khám
+                phá tủ sách ngay</a>
+            </div>
+            <div class="col-lg-6">
+              <!-- Có thể dùng một ảnh placeholder tạm thời, sau này nhóm có ảnh xịn thì thay link vào src -->
+              <img src="../img/about_page/nhaSach.avif"
+                alt="Thư viện sách HDTTT"
+                class="img-fluid shadow-lg border border-3 border-white">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--Phần cam kết và lợi ích web mang lại-->
+      <section class="py-5 bg-light-custom">
+        <div class="container">
+          <div class="text-center mb-5 section-heading">
+            <div class="section-subtitle">Tại sao chọn chúng tôi</div>
+            <h2 class="fw-bold">Cam Kết Của HDTTT</h2>
+          </div>
+
+          <div class="row g-4 text-center">
+            <div class="col-md-4">
+              <div
+                class="feature-box h-100 shadow-sm"><!--feature-bõ làm 3 khung cao bằng nhau-->
+                <div class="category-icon mx-auto fs-3">📚</div>
+                <h5 class="fw-bold mt-3">100% Bản quyền</h5>
+                <p class="text-muted small mb-0">Tất cả sách đều được nhập chính
+                  hãng, đảm bảo chất lượng giấy và nội dung.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-box h-100 shadow-sm">
+                <div class="category-icon mx-auto fs-3">🚚</div>
+                <h5 class="fw-bold mt-3">Giao hàng thần tốc</h5>
+                <p class="text-muted small mb-0">Hỗ trợ giao hàng toàn quốc
+                  nhanh chóng, đóng gói cẩn thận chống sốc.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-box h-100 shadow-sm">
+                <div class="category-icon mx-auto fs-3">🎧</div>
+                <h5 class="fw-bold mt-3">Hỗ trợ 24/7</h5>
+                <p class="text-muted small mb-0">Đội ngũ chăm sóc khách hàng
+                  luôn sẵn sàng giải đáp mọi thắc mắc của bạn.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!--Thành viên nhóm-->
+      <section class="py-5 mb-4">
+        <div class="container">
+          <div class="text-center mb-5 section-heading">
+            <div class="section-subtitle">Đội ngũ phát triển</div>
+            <h2 class="fw-bold">Thành Viên Nhóm 2</h2>
+          </div>
+
+          <!--row-cols-lg-5 để chia chính xác 5 cột đều nhau trên PC -->
+          <div
+            class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
+
+            <div class="col">
+              <div
+                class="card h-100 border-0 shadow-sm text-center py-4 transition-hover">
+                <div class="card-body">
+                  <div class="category-icon mx-auto mb-3"
+                    style="width: 70px; height: 70px; font-size: 32px;">👑</div>
+                  <h5 class="card-title mb-1 fs-6 fw-bold">Đoàn Minh Huy</h5>
+                  <p class="text-danger fw-semibold small mb-2">Trưởng nhóm</p>
+                  <p class="text-muted small mb-0">MSSV: 24700701</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div
+                class="card h-100 border-0 shadow-sm text-center py-4 transition-hover">
+                <div class="card-body">
+                  <div class="category-icon mx-auto mb-3"
+                    style="width: 70px; height: 70px; font-size: 32px;">👨‍💻</div>
+                  <h5 class="card-title mb-1 fs-6 fw-bold">Trần Thành Đạt</h5>
+                  <p class="text-primary-custom fw-semibold small mb-2">Thành
+                    viên</p>
+                  <p class="text-muted small mb-0">MSSV: 24715961</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div
+                class="card h-100 border-0 shadow-sm text-center py-4 transition-hover">
+                <div class="card-body">
+                  <div class="category-icon mx-auto mb-3"
+                    style="width: 70px; height: 70px; font-size: 32px;">👨‍💻</div>
+                  <h5 class="card-title mb-1 fs-6 fw-bold">Vũ Minh Trí</h5>
+                  <p class="text-primary-custom fw-semibold small mb-2">Thành
+                    viên</p>
+                  <p class="text-muted small mb-0">MSSV: 24710001</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div
+                class="card h-100 border-0 shadow-sm text-center py-4 transition-hover">
+                <div class="card-body">
+                  <div class="category-icon mx-auto mb-3"
+                    style="width: 70px; height: 70px; font-size: 32px;">👨‍💻</div>
+                  <h5 class="card-title mb-1 fs-6 fw-bold">Trần Văn Triều</h5>
+                  <p class="text-primary-custom fw-semibold small mb-2">Thành
+                    viên</p>
+                  <p class="text-muted small mb-0">MSSV: 24698761</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div
+                class="card h-100 border-0 shadow-sm text-center py-4 transition-hover">
+                <div class="card-body">
+                  <div class="category-icon mx-auto mb-3"
+                    style="width: 70px; height: 70px; font-size: 32px;">👨‍💻</div>
+                  <h5 class="card-title mb-1 fs-6 fw-bold">Nguyễn Phan Đạt
+                    Tâm</h5>
+                  <p class="text-primary-custom fw-semibold small mb-2">Thành
+                    viên</p>
+                  <p class="text-muted small mb-0">MSSV: 24700491</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <footer class="pt-5 pb-3">

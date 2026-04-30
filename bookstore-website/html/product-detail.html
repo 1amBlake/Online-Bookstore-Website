@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
-    <title>HDTTT Bookstore - Tiêu đề trang</title>
+      content="Chi tiết sách tại HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
+    <title>HDTTT Bookstore - Chi tiết sách</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -32,7 +32,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
               <li class="nav-item"><a class="nav-link" href="index.html">Trang
                   chủ</a></li>
-              <li class="nav-item"><a class="nav-link"
+              <li class="nav-item"><a class="nav-link active"
                   href="products.html">Sách</a></li>
               <li class="nav-item"><a class="nav-link" href="news.html">Tin
                   tức</a></li>
@@ -61,6 +61,301 @@
     </header>
 
     <main>
+      <!-- Breadcrumb -->
+      <section class="breadcrumb-section">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="index.html">Trang
+                  chủ</a></li>
+              <li class="breadcrumb-item"><a href="products.html">Sách</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Chi tiết
+                sách</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <!-- Chi tiết sản phẩm -->
+      <section class="py-5">
+        <div class="container">
+          <div class="row g-4 g-lg-5 align-items-start">
+            <div class="col-lg-5">
+              <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center bg-light-custom">
+                  <img src="../img/book_img/book_1.jpg"
+                    alt="Sách Nhà Giả Kim"
+                    class="img-fluid rounded-4 shadow-sm"
+                    style="max-height: 520px; object-fit: cover;"
+                    id="detail-book-image">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="mb-3">
+                <span class="badge bg-category mb-2"
+                  id="detail-book-category">Văn
+                  học</span>
+                <h1 class="fw-bold mb-2" id="detail-book-title">Nhà Giả Kim</h1>
+                <p class="text-muted mb-2">Tác giả: <strong
+                    id="detail-book-author">Paulo Coelho</strong></p>
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                  <span class="text-warning fw-bold"
+                    id="detail-book-rating">★★★★★
+                    4.8</span>
+                  <span class="text-muted small">Mã sách: <span
+                      id="detail-book-code">HDTTT-001</span></span>
+                  <span class="text-muted small">Tình trạng: <span
+                      class="text-success fw-semibold"
+                      id="detail-book-stock">Còn hàng</span></span>
+                </div>
+              </div>
+
+              <div class="feature-box mb-4">
+                <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
+                  <span class="display-6 book-price"
+                    id="detail-book-price">89.000đ</span>
+                  <del class="text-muted fs-5"
+                    id="detail-book-old-price">109.000đ</del>
+                  <span class="badge badge-cart rounded-pill">Tiết kiệm
+                    18%</span>
+                </div>
+                <p class="text-muted mb-0" id="detail-book-description">
+                  Một cuốn sách nổi tiếng về hành trình theo đuổi ước mơ và khám
+                  phá ý nghĩa cuộc sống. Tác phẩm phù hợp với những độc giả yêu
+                  thích văn học nhẹ nhàng, giàu cảm hứng và nhiều bài học sâu
+                  sắc.
+                </p>
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-sm-6">
+                  <div class="feature-box h-100">
+                    <p class="small text-muted mb-1">Nhà xuất bản</p>
+                    <h2 class="h6 mb-0" id="detail-book-publisher">NXB Văn
+                      Học</h2>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="feature-box h-100">
+                    <p class="small text-muted mb-1">Năm xuất bản</p>
+                    <h2 class="h6 mb-0" id="detail-book-year">2022</h2>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="feature-box h-100">
+                    <p class="small text-muted mb-1">Số trang</p>
+                    <h2 class="h6 mb-0" id="detail-book-pages">228 trang</h2>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="feature-box h-100">
+                    <p class="small text-muted mb-1">Số lượng còn</p>
+                    <h2 class="h6 mb-0" id="detail-book-quantity-stock">25
+                      quyển</h2>
+                  </div>
+                </div>
+              </div>
+
+              <form class="feature-box mb-4" action="cart.html" method="get">
+                <label for="quantity" class="form-label fw-semibold">Số
+                  lượng</label>
+                <div class="row g-3 align-items-center">
+                  <div class="col-sm-4 col-md-3">
+                    <input type="number" class="form-control" id="quantity"
+                      name="quantity" min="1" value="1"
+                      aria-label="Số lượng sách">
+                  </div>
+                  <div class="col-sm-8 col-md-9">
+                    <div class="d-flex flex-wrap gap-2">
+                      <button type="button" class="btn btn-primary px-4"
+                        id="btn-add-cart">Thêm vào giỏ hàng</button>
+                      <a href="checkout.html"
+                        class="btn btn-outline-primary px-4">Mua
+                        ngay</a>
+                    </div>
+                  </div>
+                </div>
+                <p class="small text-muted mb-0 mt-3">
+                  Phần thêm vào giỏ hàng sẽ được xử lý bằng JavaScript và
+                  LocalStorage ở bước sau.
+                </p>
+              </form>
+
+              <div class="row g-3 text-center">
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <div class="category-icon mx-auto">🚚</div>
+                    <h3 class="h6">Giao hàng nhanh</h3>
+                    <p class="small text-muted mb-0">Đóng gói cẩn thận, hỗ trợ
+                      giao toàn quốc.</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <div class="category-icon mx-auto">📚</div>
+                    <h3 class="h6">Sách bản quyền</h3>
+                    <p class="small text-muted mb-0">Thông tin rõ ràng, hình ảnh
+                      minh họa đầy đủ.</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <div class="category-icon mx-auto">💬</div>
+                    <h3 class="h6">Hỗ trợ 24/7</h3>
+                    <p class="small text-muted mb-0">Tư vấn chọn sách theo nhu
+                      cầu học tập.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mô tả chi tiết -->
+      <section class="py-5 bg-light-custom">
+        <div class="container">
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <div class="card h-100">
+                <div class="card-body p-4">
+                  <p class="section-subtitle">Thông tin sách</p>
+                  <h2 class="fw-bold mb-3">Mô tả chi tiết</h2>
+                  <p class="text-muted">
+                    Nhà Giả Kim là câu chuyện kể về hành trình tìm kiếm kho báu
+                    của chàng chăn cừu Santiago. Trên đường đi, nhân vật học
+                    được
+                    cách lắng nghe trái tim, theo đuổi ước mơ và nhận ra giá trị
+                    của những trải nghiệm trong cuộc sống.
+                  </p>
+                  <p class="text-muted mb-0">
+                    Nội dung trang này hiện được trình bày dạng tĩnh để hoàn
+                    thiện
+                    giao diện. Khi gắn JavaScript, thông tin sẽ được lấy tự động
+                    từ
+                    mảng <code>books</code> trong file <code>data.js</code> dựa
+                    trên tham số <code>?id=</code> trên URL.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card h-100">
+                <div class="card-body p-4">
+                  <p class="section-subtitle">Chính sách</p>
+                  <h2 class="fw-bold h4 mb-3">Cam kết mua hàng</h2>
+                  <ul class="list-unstyled text-muted small mb-0">
+                    <li class="mb-3">✓ Kiểm tra sách trước khi nhận hàng.</li>
+                    <li class="mb-3">✓ Hỗ trợ đổi trả nếu sản phẩm bị lỗi in
+                      ấn.</li>
+                    <li class="mb-3">✓ Giá bán rõ ràng, phù hợp với từng đầu
+                      sách.</li>
+                    <li>✓ Lưu giỏ hàng và đơn hàng bằng LocalStorage ở bước
+                      sau.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sách liên quan -->
+      <section class="py-5">
+        <div class="container">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+            <div>
+              <p class="section-subtitle">Có thể bạn cũng thích</p>
+              <h2 class="fw-bold mb-0">Sách liên quan</h2>
+            </div>
+            <a href="products.html" class="btn btn-outline-primary">Xem tất
+              cả</a>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-sm-6 col-lg-3">
+              <article class="card book-card h-100">
+                <img src="../img/book_img/book_2.jpg" class="card-img-top"
+                  alt="Sách The Lord of the Rings">
+                <div class="card-body d-flex flex-column">
+                  <span class="badge bg-category align-self-start mb-2">Văn
+                    học</span>
+                  <h3 class="card-title h6">The Lord of the Rings</h3>
+                  <p class="text-muted small flex-grow-1">J.R.R. Tolkien</p>
+                  <div
+                    class="d-flex justify-content-between align-items-center">
+                    <span class="book-price">245.000đ</span>
+                    <a href="product-detail.html?id=2"
+                      class="btn btn-sm btn-primary">Chi tiết</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+              <article class="card book-card h-100">
+                <img src="../img/book_img/book_3.jpg" class="card-img-top"
+                  alt="Sách Tôi Thấy Hoa Vàng Trên Cỏ Xanh">
+                <div class="card-body d-flex flex-column">
+                  <span class="badge bg-category align-self-start mb-2">Văn
+                    học</span>
+                  <h3 class="card-title h6">Tôi Thấy Hoa Vàng Trên Cỏ Xanh</h3>
+                  <p class="text-muted small flex-grow-1">Nguyễn Nhật Ánh</p>
+                  <div
+                    class="d-flex justify-content-between align-items-center">
+                    <span class="book-price">95.000đ</span>
+                    <a href="product-detail.html?id=3"
+                      class="btn btn-sm btn-primary">Chi tiết</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+              <article class="card book-card h-100">
+                <img src="../img/book_img/book_5.jpg" class="card-img-top"
+                  alt="Sách Hoàng Tử Bé">
+                <div class="card-body d-flex flex-column">
+                  <span class="badge bg-category align-self-start mb-2">Văn
+                    học</span>
+                  <h3 class="card-title h6">Hoàng Tử Bé</h3>
+                  <p class="text-muted small flex-grow-1">Antoine de
+                    Saint-Exupéry</p>
+                  <div
+                    class="d-flex justify-content-between align-items-center">
+                    <span class="book-price">69.000đ</span>
+                    <a href="product-detail.html?id=5"
+                      class="btn btn-sm btn-primary">Chi tiết</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+              <article class="card book-card h-100">
+                <img src="../img/book_img/book_13.jpg" class="card-img-top"
+                  alt="Sách Đắc Nhân Tâm">
+                <div class="card-body d-flex flex-column">
+                  <span class="badge bg-category align-self-start mb-2">Kỹ
+                    năng</span>
+                  <h3 class="card-title h6">Đắc Nhân Tâm</h3>
+                  <p class="text-muted small flex-grow-1">Dale Carnegie</p>
+                  <div
+                    class="d-flex justify-content-between align-items-center">
+                    <span class="book-price">105.000đ</span>
+                    <a href="product-detail.html?id=13"
+                      class="btn btn-sm btn-primary">Chi tiết</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="pt-5 pb-3">
