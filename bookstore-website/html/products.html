@@ -180,7 +180,8 @@
               <p class="section-subtitle">Tất cả sách</p>
               <h2 class="fw-bold mb-0">Danh sách sản phẩm</h2>
             </div>
-            <span class="text-muted small">Hiển thị mẫu tĩnh 12 sách</span>
+            <span class="text-muted small">Hiển thị sách từ dữ liệu
+              data.js</span>
           </div>
 
           <div class="row g-4">
@@ -188,7 +189,8 @@
             <aside class="col-lg-3">
               <div class="feature-box shadow-sm mb-4">
                 <h3 class="h5 fw-bold mb-3">Bộ lọc sách</h3>
-                <form action="products.html" method="get">
+                <form id="product-filter-form" action="products.html"
+                  method="get">
                   <div class="mb-3">
                     <label for="filterKeyword"
                       class="form-label small fw-bold">Từ khóa</label>
@@ -244,288 +246,20 @@
                 <p class="text-muted mb-0 small">Sắp xếp và phân trang sẽ xử lý
                   bằng JS sau.</p>
                 <select class="form-select form-select-sm w-auto"
+                  id="sortProduct"
                   aria-label="Sắp xếp sách">
-                  <option selected>Sắp xếp mặc định</option>
+                  <option value="default" selected>Sắp xếp mặc định</option>
                   <option value="price-asc">Giá tăng dần</option>
                   <option value="price-desc">Giá giảm dần</option>
                   <option value="name-asc">Tên A - Z</option>
                 </select>
               </div>
 
-              <div class="row g-4">
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_1.jpg" class="card-img-top"
-                      alt="Sách Nhà Giả Kim">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Văn
-                        học</span>
-                      <h3 class="card-title h6">Nhà Giả Kim</h3>
-                      <p class="small text-muted mb-1">Paulo Coelho</p>
-                      <p class="card-text text-muted small flex-grow-1">Hành
-                        trình theo đuổi ước mơ và khám phá ý nghĩa cuộc
-                        sống.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">89.000đ</span>
-                        <a href="product-detail.html?id=1"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_7.jpg" class="card-img-top"
-                      alt="Sách Tư Duy Nhanh Và Chậm">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Kinh
-                        tế</span>
-                      <h3 class="card-title h6">Tư Duy Nhanh Và Chậm</h3>
-                      <p class="small text-muted mb-1">Daniel Kahneman</p>
-                      <p class="card-text text-muted small flex-grow-1">Phân
-                        tích cách con người tư duy, ra quyết định và xử lý thông
-                        tin.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">159.000đ</span>
-                        <a href="product-detail.html?id=7"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_8.jpg" class="card-img-top"
-                      alt="Sách Cha Giàu Cha Nghèo">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Kinh
-                        tế</span>
-                      <h3 class="card-title h6">Cha Giàu Cha Nghèo</h3>
-                      <p class="small text-muted mb-1">Robert T. Kiyosaki</p>
-                      <p class="card-text text-muted small flex-grow-1">Tư duy
-                        tài chính cá nhân và cách quản lý tiền bạc hiệu quả.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">98.000đ</span>
-                        <a href="product-detail.html?id=8"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_13.jpg" class="card-img-top"
-                      alt="Sách Đắc Nhân Tâm">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Kỹ
-                        năng</span>
-                      <h3 class="card-title h6">Đắc Nhân Tâm</h3>
-                      <p class="small text-muted mb-1">Dale Carnegie</p>
-                      <p class="card-text text-muted small flex-grow-1">Nghệ
-                        thuật giao tiếp, ứng xử và xây dựng mối quan hệ.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">105.000đ</span>
-                        <a href="product-detail.html?id=13"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_14.jpg" class="card-img-top"
-                      alt="Sách Tuổi Trẻ Đáng Giá Bao Nhiêu">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Kỹ
-                        năng</span>
-                      <h3 class="card-title h6">Tuổi Trẻ Đáng Giá Bao Nhiêu</h3>
-                      <p class="small text-muted mb-1">Rosie Nguyễn</p>
-                      <p class="card-text text-muted small flex-grow-1">Gợi ý
-                        học tập, trải nghiệm, đọc sách và trưởng thành.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">78.000đ</span>
-                        <a href="product-detail.html?id=14"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_15.jpg" class="card-img-top"
-                      alt="Sách Atomic Habits">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Kỹ
-                        năng</span>
-                      <h3 class="card-title h6">Atomic Habits</h3>
-                      <p class="small text-muted mb-1">James Clear</p>
-                      <p class="card-text text-muted small flex-grow-1">Xây dựng
-                        thói quen tốt thông qua những thay đổi nhỏ mỗi ngày.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">145.000đ</span>
-                        <a href="product-detail.html?id=15"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_19.jpg" class="card-img-top"
-                      alt="Sách Harry Potter Và Hòn Đá Phù Thủy">
-                    <div class="card-body d-flex flex-column">
-                      <span
-                        class="badge bg-category align-self-start mb-2">Thiếu
-                        nhi</span>
-                      <h3 class="card-title h6">Harry Potter Và Hòn Đá Phù
-                        Thủy</h3>
-                      <p class="small text-muted mb-1">J.K. Rowling</p>
-                      <p class="card-text text-muted small flex-grow-1">Hành
-                        trình bước vào thế giới phù thủy đầy kỳ ảo.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">150.000đ</span>
-                        <a href="product-detail.html?id=19"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_20.jpg" class="card-img-top"
-                      alt="Sách Dế Mèn Phiêu Lưu Ký">
-                    <div class="card-body d-flex flex-column">
-                      <span
-                        class="badge bg-category align-self-start mb-2">Thiếu
-                        nhi</span>
-                      <h3 class="card-title h6">Dế Mèn Phiêu Lưu Ký</h3>
-                      <p class="small text-muted mb-1">Tô Hoài</p>
-                      <p class="card-text text-muted small flex-grow-1">Tác phẩm
-                        thiếu nhi nổi tiếng về chuyến phiêu lưu của Dế Mèn.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">65.000đ</span>
-                        <a href="product-detail.html?id=20"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_25.jpg" class="card-img-top"
-                      alt="Sách Clean Code">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Công
-                        nghệ</span>
-                      <h3 class="card-title h6">Clean Code</h3>
-                      <p class="small text-muted mb-1">Robert C. Martin</p>
-                      <p class="card-text text-muted small flex-grow-1">Nguyên
-                        tắc viết mã nguồn rõ ràng, dễ đọc và dễ bảo trì.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">220.000đ</span>
-                        <a href="product-detail.html?id=25"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_26.jpg" class="card-img-top"
-                      alt="Sách Eloquent JavaScript">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Công
-                        nghệ</span>
-                      <h3 class="card-title h6">Eloquent JavaScript</h3>
-                      <p class="small text-muted mb-1">Marijn Haverbeke</p>
-                      <p class="card-text text-muted small flex-grow-1">Hướng
-                        dẫn JavaScript từ nền tảng đến các khái niệm nâng
-                        cao.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">120.000đ</span>
-                        <a href="product-detail.html?id=26"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_27.jpg" class="card-img-top"
-                      alt="Sách HTML and CSS Design and Build Websites">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Công
-                        nghệ</span>
-                      <h3 class="card-title h6">HTML and CSS</h3>
-                      <p class="small text-muted mb-1">Jon Duckett</p>
-                      <p class="card-text text-muted small flex-grow-1">Sách
-                        nhập môn trực quan về HTML và CSS cho người mới bắt
-                        đầu.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">135.000đ</span>
-                        <a href="product-detail.html?id=27"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="col-sm-6 col-xl-4">
-                  <article class="card book-card h-100">
-                    <img src="../img/book_img/book_30.jpg" class="card-img-top"
-                      alt="Sách The Pragmatic Programmer">
-                    <div class="card-body d-flex flex-column">
-                      <span class="badge bg-category align-self-start mb-2">Công
-                        nghệ</span>
-                      <h3 class="card-title h6">The Pragmatic Programmer</h3>
-                      <p class="small text-muted mb-1">David Thomas, Andrew
-                        Hunt</p>
-                      <p class="card-text text-muted small flex-grow-1">Tư duy
-                        và kinh nghiệm thực tế cho lập trình viên chuyên
-                        nghiệp.</p>
-                      <div
-                        class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="book-price">190.000đ</span>
-                        <a href="product-detail.html?id=30"
-                          class="btn btn-sm btn-primary">Chi tiết</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </div>
+              <div class="row g-4" id="product-list"></div>
 
               <nav class="mt-5" aria-label="Phân trang sách">
-                <ul class="pagination justify-content-center mb-0">
-                  <li class="page-item disabled"><a class="page-link" href="#"
-                      tabindex="-1">Trước</a></li>
-                  <li class="page-item active"><a class="page-link"
-                      href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link"
-                      href="#">Sau</a></li>
-                </ul>
+                <ul class="pagination justify-content-center mb-0"
+                  id="product-pagination"></ul>
               </nav>
             </div>
           </div>

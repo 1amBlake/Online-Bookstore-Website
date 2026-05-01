@@ -1,0 +1,694 @@
+// =====================================================
+// main.js
+// File JavaScript dùng chung cho toàn bộ website
+// HDTTT Bookstore
+// =====================================================
+
+$(document).ready(function () {
+    // Gắn class active cho menu tương ứng với trang hiện tại
+    setActiveNavLink();
+
+    // Cập nhật số lượng sản phẩm trong giỏ hàng ở navbar
+    updateCartCount();
+
+    // Xử lý các form tìm kiếm có class .search-box
+    handleSearchForm();
+
+    // Hiển thị danh sách sách nổi bật ở trang chủ
+    renderFeaturedBooks();
+
+    // Hiển thị danh sách sách ở trang products.html
+    renderProductsPage();
+
+    // Hiển thị chi tiết sách ở trang product-detail.html
+    renderProductDetail();
+
+    // Xử lý nút thêm vào giỏ hàng ở trang product-detail.html
+    handleAddToCart();
+});
+
+
+// =====================================================
+// 1. setActiveNavLink()
+// Chức năng:
+// - Tự động xác định người dùng đang ở trang nào
+// - Thêm class "active" vào menu tương ứng trên navbar
+// - Giúp không cần sửa class active thủ công ở từng file HTML
+// =====================================================
+function setActiveNavLink() {
+    const currentPage = window.location.pathname.split("/").pop();
+
+    $(".navbar .nav-link").each(function () {
+        const linkPage = $(this).attr("href");
+
+        if (linkPage === currentPage) {
+            $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
+}
+
+
+// =====================================================
+// 2. updateCartCount()
+// Chức năng:
+// - Đọc dữ liệu giỏ hàng từ LocalStorage
+// - Tính tổng số lượng sản phẩm trong giỏ
+// - Hiển thị số lượng đó lên badge "Giỏ hàng" trên navbar
+//
+// LocalStorage key sử dụng: "cart"
+// Dữ liệu mẫu:
+// [
+//   { id: 1, quantity: 2 },
+//   { id: 13, quantity: 1 }
+// ]
+// =====================================================
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalQuantity = 0;
+
+    cart.forEach(function (item) {
+        totalQuantity += item.quantity || 1;
+    });
+
+    $("#cart-count").text(totalQuantity);
+}
+
+
+// =====================================================
+// 3. handleSearchForm()
+// Chức năng:
+// - Xử lý các form tìm kiếm có class .search-box
+// - Dùng được cho cả index.html và products.html
+// - Nếu người dùng nhập từ khóa thì chuyển sang:
+//   products.html?keyword=tu-khoa
+// - Nếu ô tìm kiếm trống thì chuyển sang products.html
+// =====================================================
+function handleSearchForm() {
+    $(".search-box").on("submit", function (event) {
+        event.preventDefault();
+
+        const keyword = $(this).find("input[name='keyword']").val().trim();
+
+        if (keyword === "") {
+            window.location.href = "products.html";
+        } else {
+            window.location.href = "products.html?keyword=" + encodeURIComponent(keyword);
+        }
+    });
+}
+
+
+// =====================================================
+// 4. renderFeaturedBooks()
+// Chức năng:
+// - Lấy danh sách sách nổi bật từ data.js
+// - Chỉ hiển thị 4 sách đầu tiên
+// - Tự động tạo card sách và đưa vào index.html
+//
+// Điều kiện:
+// - Trong index.html phải có thẻ:
+//   <div class="row g-4" id="featured-books"></div>
+// =====================================================
+function renderFeaturedBooks() {
+    const container = $("#featured-books");
+
+    // Nếu trang hiện tại không có khu vực sách nổi bật thì không chạy
+    if (container.length === 0) {
+        return;
+    }
+
+    const featuredBooks = getFeaturedBooks().slice(0, 4);
+    let html = "";
+
+    featuredBooks.forEach(function (book) {
+        const category = getCategoryById(book.categoryId);
+        const categoryName = category ? category.name : "Sách";
+
+        html += `
+            <div class="col-sm-6 col-lg-3">
+                <article class="card book-card h-100">
+                    <img src="${book.image}" 
+                         class="card-img-top" 
+                         alt="Sách ${book.title}">
+
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge bg-category align-self-start mb-2">
+                            ${categoryName}
+                        </span>
+
+                        <h3 class="card-title h6">${book.title}</h3>
+
+                        <p class="card-text text-muted small flex-grow-1">
+                            ${book.description}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="book-price">${formatPrice(book.price)}</span>
+
+                            <a href="product-detail.html?id=${book.id}" 
+                               class="btn btn-sm btn-primary">
+                                Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        `;
+    });
+
+    container.html(html);
+}
+
+
+// =====================================================
+// 5. getUrlParam(paramName)
+// Chức năng:
+// - Lấy giá trị tham số trên URL
+// - Dùng cho products.html, product-detail.html,
+//   news-detail.html, order-detail.html
+//
+// Ví dụ:
+// URL: product-detail.html?id=5
+// getUrlParam("id") sẽ trả về "5"
+// =====================================================
+function getUrlParam(paramName) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(paramName);
+}
+
+
+// =====================================================
+// PHẦN PRODUCTS.HTML VÀ PRODUCT-DETAIL.HTML
+// Chức năng:
+// - Render danh sách sản phẩm từ data.js
+// - Lọc sách theo từ khóa, thể loại, giá
+// - Sắp xếp sách
+// - Phân trang
+// - Render chi tiết 1 quyển sách theo id trên URL
+// - Thêm sách vào giỏ hàng bằng LocalStorage
+// =====================================================
+
+
+// Số lượng sách hiển thị trên mỗi trang products.html
+const PRODUCTS_PER_PAGE = 9;
+
+
+// =====================================================
+// 6. renderProductsPage()
+// Chức năng:
+// - Kiểm tra xem trang hiện tại có phải products.html không
+// - Đọc các tham số trên URL như keyword, category, price, sort, page
+// - Lọc sách theo từ khóa, thể loại, khoảng giá
+// - Sắp xếp sách nếu người dùng chọn
+// - Cắt danh sách sách theo trang hiện tại
+// - Gọi renderBookList() để hiển thị sách
+// - Gọi renderProductPagination() để hiển thị phân trang
+// =====================================================
+function renderProductsPage() {
+    const productList = $("#product-list");
+
+    // Nếu không có id product-list nghĩa là không phải trang products.html
+    if (productList.length === 0) {
+        return;
+    }
+
+    const keyword = getUrlParam("keyword") || "";
+    const category = getUrlParam("category") || "";
+    const price = getUrlParam("price") || "";
+    const sort = getUrlParam("sort") || "default";
+    const page = Number(getUrlParam("page")) || 1;
+
+    $("#filterKeyword").val(keyword);
+    $("#filterCategory").val(category);
+    $("#filterPrice").val(price);
+    $("#sortProduct").val(sort);
+
+    let filteredBooks = books.filter(function (book) {
+        const matchKeyword =
+            keyword === "" ||
+            book.title.toLowerCase().includes(keyword.toLowerCase()) ||
+            book.author.toLowerCase().includes(keyword.toLowerCase()) ||
+            book.description.toLowerCase().includes(keyword.toLowerCase());
+
+        const matchCategory =
+            category === "" || book.categoryId === category;
+
+        let matchPrice = true;
+
+        if (price === "duoi-100") {
+            matchPrice = book.price < 100000;
+        } else if (price === "100-150") {
+            matchPrice = book.price >= 100000 && book.price <= 150000;
+        } else if (price === "tren-150") {
+            matchPrice = book.price > 150000;
+        }
+
+        return matchKeyword && matchCategory && matchPrice;
+    });
+
+    if (sort === "price-asc") {
+        filteredBooks.sort(function (a, b) {
+            return a.price - b.price;
+        });
+    } else if (sort === "price-desc") {
+        filteredBooks.sort(function (a, b) {
+            return b.price - a.price;
+        });
+    } else if (sort === "name-asc") {
+        filteredBooks.sort(function (a, b) {
+            return a.title.localeCompare(b.title, "vi");
+        });
+    }
+
+    const totalPages = Math.ceil(filteredBooks.length / PRODUCTS_PER_PAGE);
+    const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+    const startIndex = (validPage - 1) * PRODUCTS_PER_PAGE;
+
+    const booksOnPage = filteredBooks.slice(
+        startIndex,
+        startIndex + PRODUCTS_PER_PAGE
+    );
+
+    renderBookList(booksOnPage);
+    renderProductPagination(totalPages, validPage);
+    handleProductFilterForm();
+    handleProductSort();
+}
+
+
+// =====================================================
+// 7. renderBookList(bookArray)
+// Chức năng:
+// - Nhận vào một mảng sách
+// - Tạo HTML card cho từng quyển sách
+// - Đưa toàn bộ card vào #product-list
+// - Nếu không có sách phù hợp thì hiện thông báo
+// =====================================================
+function renderBookList(bookArray) {
+    const productList = $("#product-list");
+
+    if (bookArray.length === 0) {
+        productList.html(`
+            <div class="col-12">
+                <div class="feature-box text-center">
+                    <h3 class="h5">Không tìm thấy sách phù hợp</h3>
+                    <p class="text-muted mb-0">
+                        Bạn hãy thử từ khóa hoặc bộ lọc khác.
+                    </p>
+                </div>
+            </div>
+        `);
+        return;
+    }
+
+    let html = "";
+
+    bookArray.forEach(function (book) {
+        const category = getCategoryById(book.categoryId);
+        const categoryName = category ? category.name : "Sách";
+
+        html += `
+            <div class="col-sm-6 col-xl-4">
+                <article class="card book-card h-100">
+                    <img src="${book.image}" 
+                         class="card-img-top" 
+                         alt="Sách ${book.title}">
+
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge bg-category align-self-start mb-2">
+                            ${categoryName}
+                        </span>
+
+                        <h3 class="card-title h6">${book.title}</h3>
+
+                        <p class="small text-muted mb-1">
+                            ${book.author}
+                        </p>
+
+                        <p class="card-text text-muted small flex-grow-1">
+                            ${book.description}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="book-price">
+                                ${formatPrice(book.price)}
+                            </span>
+
+                            <a href="product-detail.html?id=${book.id}" 
+                               class="btn btn-sm btn-primary">
+                                Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        `;
+    });
+
+    productList.html(html);
+}
+
+
+// =====================================================
+// 8. renderProductPagination(totalPages, currentPage)
+// Chức năng:
+// - Nhận tổng số trang và trang hiện tại
+// - Tạo nút Trước, Sau và các nút số trang
+// - Trang hiện tại sẽ được thêm class active
+// - Nếu chỉ có 1 trang thì không hiện phân trang
+// =====================================================
+function renderProductPagination(totalPages, currentPage) {
+    const pagination = $("#product-pagination");
+
+    if (pagination.length === 0) {
+        return;
+    }
+
+    if (totalPages <= 1) {
+        pagination.html("");
+        return;
+    }
+
+    let html = "";
+
+    html += `
+        <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+            <a class="page-link" href="${buildProductUrl(currentPage - 1)}">
+                Trước
+            </a>
+        </li>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+        html += `
+            <li class="page-item ${i === currentPage ? "active" : ""}">
+                <a class="page-link" href="${buildProductUrl(i)}">
+                    ${i}
+                </a>
+            </li>
+        `;
+    }
+
+    html += `
+        <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+            <a class="page-link" href="${buildProductUrl(currentPage + 1)}">
+                Sau
+            </a>
+        </li>
+    `;
+
+    pagination.html(html);
+}
+
+
+// =====================================================
+// 9. buildProductUrl(page)
+// Chức năng:
+// - Tạo lại URL cho products.html khi người dùng bấm phân trang
+// - Giữ nguyên các tham số lọc hiện tại như keyword, category, price, sort
+// - Chỉ thay đổi tham số page
+//
+// Ví dụ:
+// products.html?category=cong-nghe&page=2
+// =====================================================
+function buildProductUrl(page) {
+    const params = new URLSearchParams(window.location.search);
+
+    params.set("page", page);
+
+    return "products.html?" + params.toString();
+}
+
+
+// =====================================================
+// 10. handleProductFilterForm()
+// Chức năng:
+// - Xử lý khi người dùng bấm nút "Lọc sách"
+// - Lấy dữ liệu từ form lọc
+// - Tạo URL mới dựa theo keyword, category, price
+// - Chuyển trang đến URL đó để render lại danh sách sách
+// =====================================================
+function handleProductFilterForm() {
+    $("#product-filter-form").on("submit", function (event) {
+        event.preventDefault();
+
+        const keyword = $("#filterKeyword").val().trim();
+        const category = $("#filterCategory").val();
+        const price = $("#filterPrice").val();
+
+        const params = new URLSearchParams();
+
+        if (keyword !== "") {
+            params.set("keyword", keyword);
+        }
+
+        if (category !== "") {
+            params.set("category", category);
+        }
+
+        if (price !== "") {
+            params.set("price", price);
+        }
+
+        params.set("page", 1);
+
+        window.location.href = "products.html?" + params.toString();
+    });
+}
+
+
+// =====================================================
+// 11. handleProductSort()
+// Chức năng:
+// - Xử lý khi người dùng chọn sắp xếp
+// - Cập nhật tham số sort trên URL
+// - Chuyển lại về page 1 sau khi đổi kiểu sắp xếp
+// =====================================================
+function handleProductSort() {
+    $("#sortProduct").on("change", function () {
+        const params = new URLSearchParams(window.location.search);
+        const sort = $(this).val();
+
+        if (sort === "default") {
+            params.delete("sort");
+        } else {
+            params.set("sort", sort);
+        }
+
+        params.set("page", 1);
+
+        window.location.href = "products.html?" + params.toString();
+    });
+}
+
+
+// =====================================================
+// 12. renderProductDetail()
+// Chức năng:
+// - Kiểm tra xem trang hiện tại có phải product-detail.html không
+// - Lấy id sách từ URL
+// - Tìm sách trong mảng books bằng getBookById()
+// - Nếu có sách thì đổ dữ liệu lên giao diện chi tiết
+// - Nếu không có sách thì hiển thị thông báo lỗi
+// - Gọi renderRelatedBooks() để hiển thị sách liên quan
+// =====================================================
+function renderProductDetail() {
+    if ($("#detail-book-title").length === 0) {
+        return;
+    }
+
+    const id = getUrlParam("id") || 1;
+    const book = getBookById(id);
+
+    if (!book) {
+        $("main").html(`
+            <section class="py-5">
+                <div class="container">
+                    <div class="feature-box text-center">
+                        <h1 class="h3">Không tìm thấy sách</h1>
+                        <p class="text-muted">
+                            Sách bạn đang xem không tồn tại hoặc đã bị xóa.
+                        </p>
+                        <a href="products.html" class="btn btn-primary">
+                            Quay lại danh sách sách
+                        </a>
+                    </div>
+                </div>
+            </section>
+        `);
+        return;
+    }
+
+    const category = getCategoryById(book.categoryId);
+    const categoryName = category ? category.name : "Sách";
+    const discount = Math.round((1 - book.price / book.oldPrice) * 100);
+
+    $("#detail-book-image").attr("src", book.image);
+    $("#detail-book-image").attr("alt", "Sách " + book.title);
+
+    $("#detail-book-category").text(categoryName);
+    $("#detail-book-title").text(book.title);
+    $("#detail-book-author").text(book.author);
+    $("#detail-book-rating").text("★★★★★ " + book.rating);
+    $("#detail-book-code").text("HDTTT-" + String(book.id).padStart(3, "0"));
+
+    $("#detail-book-stock").text(book.stock > 0 ? "Còn hàng" : "Hết hàng");
+    $("#detail-book-price").text(formatPrice(book.price));
+    $("#detail-book-old-price").text(formatPrice(book.oldPrice));
+
+    $("#detail-book-description").text(book.description);
+    $("#detail-book-long-description").text(book.longDescription || book.description);
+    $("#detail-book-publisher").text(book.publisher);
+    $("#detail-book-year").text(book.year);
+    $("#detail-book-pages").text(book.pages + " trang");
+    $("#detail-book-quantity-stock").text(book.stock + " quyển");
+
+    $("#quantity").attr("max", book.stock);
+    $("#detail-discount").text("Tiết kiệm " + discount + "%");
+
+    renderRelatedBooks(book);
+}
+
+
+// =====================================================
+// 13. renderRelatedBooks(currentBook)
+// Chức năng:
+// - Nhận vào sách hiện tại
+// - Lọc ra các sách cùng thể loại
+// - Loại bỏ chính sách đang xem
+// - Lấy tối đa 4 sách liên quan
+// - Render thành card và đưa vào #related-books
+// =====================================================
+function renderRelatedBooks(currentBook) {
+    const container = $("#related-books");
+
+    if (container.length === 0) {
+        return;
+    }
+
+    const relatedBooks = books
+        .filter(function (book) {
+            return book.categoryId === currentBook.categoryId &&
+                book.id !== currentBook.id;
+        })
+        .slice(0, 4);
+
+    let html = "";
+
+    relatedBooks.forEach(function (book) {
+        const category = getCategoryById(book.categoryId);
+        const categoryName = category ? category.name : "Sách";
+
+        html += `
+            <div class="col-sm-6 col-lg-3">
+                <article class="card book-card h-100">
+                    <img src="${book.image}" 
+                        class="card-img-top" 
+                        alt="Sách ${book.title}">
+
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge bg-category align-self-start mb-2">
+                            ${categoryName}
+                        </span>
+
+                        <h3 class="card-title h6">${book.title}</h3>
+
+                        <p class="text-muted small flex-grow-1">
+                            ${book.author}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="book-price">
+                                ${formatPrice(book.price)}
+                            </span>
+
+                            <a href="product-detail.html?id=${book.id}" 
+                               class="btn btn-sm btn-primary">
+                                Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        `;
+    });
+
+    container.html(html);
+}
+
+
+// =====================================================
+// 14. handleAddToCart()
+// Chức năng:
+// - Gắn sự kiện click cho nút "Thêm vào giỏ hàng"
+// - Lấy id sách từ URL
+// - Lấy số lượng người dùng nhập
+// - Kiểm tra sách có tồn tại không
+// - Kiểm tra số lượng hợp lệ không
+// - Gọi addToCart() để lưu sách vào LocalStorage
+// - Cập nhật lại số lượng giỏ hàng trên navbar
+// =====================================================
+function handleAddToCart() {
+    $("#btn-add-cart").on("click", function () {
+        const id = Number(getUrlParam("id") || 1);
+        const book = getBookById(id);
+
+        if (!book) {
+            alert("Không tìm thấy sách để thêm vào giỏ hàng.");
+            return;
+        }
+
+        const quantity = Number($("#quantity").val());
+
+        if (quantity < 1) {
+            alert("Số lượng phải lớn hơn 0.");
+            return;
+        }
+
+        if (quantity > book.stock) {
+            alert("Số lượng vượt quá số sách còn trong kho.");
+            return;
+        }
+
+        addToCart(book.id, quantity);
+        updateCartCount();
+
+        alert("Đã thêm sách vào giỏ hàng!");
+    });
+}
+
+
+// =====================================================
+// 15. addToCart(bookId, quantity)
+// Chức năng:
+// - Đọc giỏ hàng từ LocalStorage
+// - Nếu sách đã có trong giỏ thì tăng số lượng
+// - Nếu sách chưa có thì thêm sách mới vào giỏ
+// - Lưu lại giỏ hàng vào LocalStorage
+//
+// Dữ liệu lưu trong LocalStorage có dạng:
+// [
+//   { id: 1, quantity: 2 },
+//   { id: 13, quantity: 1 }
+// ]
+// =====================================================
+function addToCart(bookId, quantity) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingItem = cart.find(function (item) {
+        return item.id === bookId;
+    });
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: bookId,
+            quantity: quantity
+        });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+}

@@ -118,8 +118,10 @@
                     id="detail-book-price">89.000đ</span>
                   <del class="text-muted fs-5"
                     id="detail-book-old-price">109.000đ</del>
-                  <span class="badge badge-cart rounded-pill">Tiết kiệm
-                    18%</span>
+                  <span class="badge badge-cart rounded-pill"
+                    id="detail-discount">
+                    Tiết kiệm 18%
+                  </span>
                 </div>
                 <p class="text-muted mb-0" id="detail-book-description">
                   Một cuốn sách nổi tiếng về hành trình theo đuổi ước mơ và khám
@@ -177,10 +179,6 @@
                     </div>
                   </div>
                 </div>
-                <p class="small text-muted mb-0 mt-3">
-                  Phần thêm vào giỏ hàng sẽ được xử lý bằng JavaScript và
-                  LocalStorage ở bước sau.
-                </p>
               </form>
 
               <div class="row g-3 text-center">
@@ -223,20 +221,8 @@
                 <div class="card-body p-4">
                   <p class="section-subtitle">Thông tin sách</p>
                   <h2 class="fw-bold mb-3">Mô tả chi tiết</h2>
-                  <p class="text-muted">
-                    Nhà Giả Kim là câu chuyện kể về hành trình tìm kiếm kho báu
-                    của chàng chăn cừu Santiago. Trên đường đi, nhân vật học
-                    được
-                    cách lắng nghe trái tim, theo đuổi ước mơ và nhận ra giá trị
-                    của những trải nghiệm trong cuộc sống.
-                  </p>
-                  <p class="text-muted mb-0">
-                    Nội dung trang này hiện được trình bày dạng tĩnh để hoàn
-                    thiện
-                    giao diện. Khi gắn JavaScript, thông tin sẽ được lấy tự động
-                    từ
-                    mảng <code>books</code> trong file <code>data.js</code> dựa
-                    trên tham số <code>?id=</code> trên URL.
+                  <p class="text-muted" id="detail-book-long-description">
+                    Mô tả chi tiết sách sẽ được hiển thị tại đây.
                   </p>
                 </div>
               </div>
@@ -276,84 +262,8 @@
               cả</a>
           </div>
 
-          <div class="row g-4">
-            <div class="col-sm-6 col-lg-3">
-              <article class="card book-card h-100">
-                <img src="../img/book_img/book_2.jpg" class="card-img-top"
-                  alt="Sách The Lord of the Rings">
-                <div class="card-body d-flex flex-column">
-                  <span class="badge bg-category align-self-start mb-2">Văn
-                    học</span>
-                  <h3 class="card-title h6">The Lord of the Rings</h3>
-                  <p class="text-muted small flex-grow-1">J.R.R. Tolkien</p>
-                  <div
-                    class="d-flex justify-content-between align-items-center">
-                    <span class="book-price">245.000đ</span>
-                    <a href="product-detail.html?id=2"
-                      class="btn btn-sm btn-primary">Chi tiết</a>
-                  </div>
-                </div>
-              </article>
-            </div>
+          <div class="row g-4" id="related-books"></div>
 
-            <div class="col-sm-6 col-lg-3">
-              <article class="card book-card h-100">
-                <img src="../img/book_img/book_3.jpg" class="card-img-top"
-                  alt="Sách Tôi Thấy Hoa Vàng Trên Cỏ Xanh">
-                <div class="card-body d-flex flex-column">
-                  <span class="badge bg-category align-self-start mb-2">Văn
-                    học</span>
-                  <h3 class="card-title h6">Tôi Thấy Hoa Vàng Trên Cỏ Xanh</h3>
-                  <p class="text-muted small flex-grow-1">Nguyễn Nhật Ánh</p>
-                  <div
-                    class="d-flex justify-content-between align-items-center">
-                    <span class="book-price">95.000đ</span>
-                    <a href="product-detail.html?id=3"
-                      class="btn btn-sm btn-primary">Chi tiết</a>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-              <article class="card book-card h-100">
-                <img src="../img/book_img/book_5.jpg" class="card-img-top"
-                  alt="Sách Hoàng Tử Bé">
-                <div class="card-body d-flex flex-column">
-                  <span class="badge bg-category align-self-start mb-2">Văn
-                    học</span>
-                  <h3 class="card-title h6">Hoàng Tử Bé</h3>
-                  <p class="text-muted small flex-grow-1">Antoine de
-                    Saint-Exupéry</p>
-                  <div
-                    class="d-flex justify-content-between align-items-center">
-                    <span class="book-price">69.000đ</span>
-                    <a href="product-detail.html?id=5"
-                      class="btn btn-sm btn-primary">Chi tiết</a>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-              <article class="card book-card h-100">
-                <img src="../img/book_img/book_13.jpg" class="card-img-top"
-                  alt="Sách Đắc Nhân Tâm">
-                <div class="card-body d-flex flex-column">
-                  <span class="badge bg-category align-self-start mb-2">Kỹ
-                    năng</span>
-                  <h3 class="card-title h6">Đắc Nhân Tâm</h3>
-                  <p class="text-muted small flex-grow-1">Dale Carnegie</p>
-                  <div
-                    class="d-flex justify-content-between align-items-center">
-                    <span class="book-price">105.000đ</span>
-                    <a href="product-detail.html?id=13"
-                      class="btn btn-sm btn-primary">Chi tiết</a>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
         </div>
       </section>
     </main>
