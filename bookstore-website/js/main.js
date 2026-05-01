@@ -605,7 +605,7 @@ function renderRelatedBooks(currentBook) {
                             </span>
 
                             <a href="product-detail.html?id=${book.id}" 
-                               class="btn btn-sm btn-primary">
+                            class="btn btn-sm btn-primary">
                                 Chi tiết
                             </a>
                         </div>
