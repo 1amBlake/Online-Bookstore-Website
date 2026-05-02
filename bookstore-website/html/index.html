@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
+    <title>HDTTT Bookstore - Trang chủ</title>
+
+    <!-- Bootstrap và CSS dùng offline theo yêu cầu bài tập lớn -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <!-- Header / Navbar dùng lại cho tất cả trang -->
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center fw-bold"
+            href="index.html">
+            <img src="../img/logo.png" alt="Logo HDTTT Bookstore"
+              class="logo me-2">
+            <span>HDTTT Bookstore</span>
+          </a>
+
+          <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false"
+            aria-label="Mở menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul
+              class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+              <li class="nav-item"><a class="nav-link active"
+                  href="index.html">Trang chủ</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="products.html">Sách</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="news.html">Tin tức</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="about.html">Giới thiệu</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="sitemap.html">Sitemap</a></li>
+              <li class="nav-item ms-lg-2">
+                <a class="nav-link position-relative"
+                  href="cart.html" aria-label="Giỏ hàng">
+                  Giỏ hàng
+                  <span
+                    class="badge badge-cart rounded-pill ms-1"
+                    id="cart-count">0</span>
+                </a>
+              </li>
+              <li class="nav-item ms-lg-3"><a
+                  class="btn btn-outline-light btn-sm px-3"
+                  href="login.html">Đăng nhập</a></li>
+              <li class="nav-item ms-lg-2"><a
+                  class="btn btn-light btn-sm px-3 text-primary-custom"
+                  href="register.html">Đăng ký</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero / Banner trang chủ -->
+      <section class="hero-section">
+        <div class="container">
+          <div class="row align-items-center min-vh-75 py-5">
+            <div class="col-lg-6 order-2 order-lg-1">
+              <p class="section-subtitle mb-2">Hiệu sách trực
+                tuyến dành cho mọi người</p>
+              <h1 class="display-5 fw-bold mb-3">Khám phá tri thức
+                qua từng trang sách</h1>
+              <p class="lead text-muted mb-4">
+                HDTTT Bookstore giới thiệu, tìm kiếm và đặt mua
+                sách trực tuyến với giao diện thân thiện, dễ sử
+                dụng và phù hợp trên nhiều thiết bị.
+              </p>
+
+              <form class="search-box mb-4" action="products.html"
+                method="get">
+                <div class="input-group input-group-lg">
+                  <input type="search" class="form-control"
+                    name="keyword"
+                    placeholder="Tìm tên sách, tác giả, thể loại..."
+                    aria-label="Tìm kiếm sách">
+                  <button class="btn btn-primary"
+                    type="submit">Tìm kiếm</button>
+                </div>
+              </form>
+
+              <div class="d-flex flex-wrap gap-2">
+                <a href="products.html"
+                  class="btn btn-primary btn-lg">Xem danh sách
+                  sách</a>
+                <a href="about.html"
+                  class="btn btn-outline-primary btn-lg">Giới
+                  thiệu website</a>
+              </div>
+            </div>
+
+            <div class="col-lg-6 order-1 order-lg-2 mb-4 mb-lg-0">
+              <div class="hero-image-wrap">
+                <img src="../img/logo.png"
+                  alt="Banner cửa hàng sách trực tuyến HDTTT Bookstore"
+                  class="img-fluid hero-image hero-logo-image">
+                <div class="hero-card shadow-sm">
+                  <strong>100+</strong>
+                  <span>Đầu sách tham khảo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Danh mục nổi bật -->
+      <section class="py-5">
+        <div class="container">
+          <div class="section-heading text-center mb-4">
+            <p class="section-subtitle">Danh mục sách</p>
+            <h2 class="fw-bold">Tìm sách theo thể loại</h2>
+          </div>
+
+          <div class="row g-4 justify-content-center">
+            <div class="col-6 col-md-4 col-lg">
+              <a href="products.html?category=van-hoc"
+                class="category-card d-block text-center h-100">
+                <div class="category-icon">VH</div>
+                <h3 class="h6 mb-1">Văn học</h3>
+                <p class="small text-muted mb-0">Tiểu thuyết,
+                  truyện ngắn</p>
+              </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+              <a href="products.html?category=kinh-te"
+                class="category-card d-block text-center h-100">
+                <div class="category-icon">KT</div>
+                <h3 class="h6 mb-1">Kinh tế</h3>
+                <p class="small text-muted mb-0">Kinh doanh,
+                  quản trị</p>
+              </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+              <a href="products.html?category=ky-nang"
+                class="category-card d-block text-center h-100">
+                <div class="category-icon">KN</div>
+                <h3 class="h6 mb-1">Kỹ năng</h3>
+                <p class="small text-muted mb-0">Phát triển bản
+                  thân</p>
+              </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+              <a href="products.html?category=thieu-nhi"
+                class="category-card d-block text-center h-100">
+                <div class="category-icon">TN</div>
+                <h3 class="h6 mb-1">Thiếu nhi</h3>
+                <p class="small text-muted mb-0">Truyện tranh,
+                  sách tuổi thơ</p>
+              </a>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+              <a href="products.html?category=cong-nghe"
+                class="category-card d-block text-center h-100">
+                <div class="category-icon">CN</div>
+                <h3 class="h6 mb-1">Công nghệ</h3>
+                <p class="small text-muted mb-0">Lập trình,
+                  thiết kế web</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sách nổi bật -->
+      <section class="py-5 bg-light-custom">
+        <div class="container">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+            <div>
+              <p class="section-subtitle">Sách nổi bật</p>
+              <h2 class="fw-bold mb-0">Gợi ý cho bạn hôm nay</h2>
+            </div>
+            <a href="products.html"
+              class="btn btn-outline-primary">Xem tất cả</a>
+          </div>
+
+          <!-- Khu vực này sẽ được main.js tự động render sách nổi bật từ data.js -->
+          <div class="row g-4" id="featured-books"></div>
+        </div>
+      </section>
+
+      <!-- Giới thiệu ngắn -->
+      <section class="py-5">
+        <div class="container">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-5">
+              <img src="../img/about-bookstore.jpg"
+                alt="Không gian đọc sách"
+                class="img-fluid rounded-4 shadow-sm about-image">
+            </div>
+            <div class="col-lg-7">
+              <p class="section-subtitle">Về HDTTT Bookstore</p>
+              <h2 class="fw-bold mb-3">Website giới thiệu và bán
+                sách trực tuyến</h2>
+              <p class="text-muted">
+                HDTTT Bookstore ra đời với sứ mệnh mang nguồn tri thức vô tận
+                đến gần hơn với độc giả. Chúng tôi tự hào là nền tảng cung cấp
+                các đầu sách đa dạng từ Văn học, Khoa học, đến Kỹ năng sống với
+                chất lượng phục vụ tốt nhất.
+              </p>
+              <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <h3 class="h6">100% Bản quyền</h3>
+                    <p class="small text-muted mb-0">Tất cả sách đều được nhập
+                      chính hãng, đảm bảo chất lượng giấy và nội dung.</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <h3 class="h6">Giao hàng thần tốc</h3>
+                    <p class="small text-muted mb-0">Hỗ trợ giao hàng toàn quốc
+                      nhanh chóng, đóng gói cẩn thận chống sốc.</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="feature-box h-100">
+                    <h3 class="h6">Hỗ trợ 24/7</h3>
+                    <p class="small text-muted mb-0">Đội ngũ chăm sóc khách hàng
+                      luôn sẵn sàng giải đáp mọi thắc mắc của bạn.</p>
+                  </div>
+                </div>
+              </div>
+              <a href="about.html"
+                class="btn btn-primary mt-4">Xem thêm</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tin tức -->
+      <section class="py-5 bg-light-custom">
+        <div class="container">
+          <div class="section-heading text-center mb-4">
+            <p class="section-subtitle">Tin tức</p>
+            <h2 class="fw-bold">Bài viết mới về sách</h2>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-4">
+              <article class="card news-card h-100">
+                <img src="../img/news_img/news_1.jpg"
+                  class="card-img-top"
+                  alt="Mẹo chọn sách hay">
+                <div class="card-body">
+                  <p
+                    class="small text-muted mb-1">29/04/2026</p>
+                  <h3 class="h6 card-title">5 mẹo chọn sách
+                    phù hợp với mục tiêu học tập</h3>
+                  <p class="card-text small text-muted">Gợi ý
+                    cách chọn sách theo chủ đề, tác giả và
+                    đánh giá nội dung.</p>
+                  <a href="news-detail.html?id=1"
+                    class="stretched-link">Đọc tiếp</a>
+                </div>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="card news-card h-100">
+                <img src="../img/news_img/news_2.jpg"
+                  class="card-img-top"
+                  alt="Xu hướng đọc sách">
+                <div class="card-body">
+                  <p
+                    class="small text-muted mb-1">29/04/2026</p>
+                  <h3 class="h6 card-title">Xu hướng đọc sách
+                    trực tuyến hiện nay</h3>
+                  <p class="card-text small text-muted">Sách
+                    giấy và sách điện tử đang được kết hợp
+                    linh hoạt hơn.</p>
+                  <a href="news-detail.html?id=2"
+                    class="stretched-link">Đọc tiếp</a>
+                </div>
+              </article>
+            </div>
+            <div class="col-md-4">
+              <article class="card news-card h-100">
+                <img src="../img/news_img/news_3.jpg"
+                  class="card-img-top" alt="Góc học tập">
+                <div class="card-body">
+                  <p
+                    class="small text-muted mb-1">29/04/2026</p>
+                  <h3 class="h6 card-title">Cách xây dựng thói
+                    quen đọc sách mỗi ngày</h3>
+                  <p class="card-text small text-muted">Bắt
+                    đầu từ mục tiêu nhỏ và duy trì thời gian
+                    đọc cố định.</p>
+                  <a href="news-detail.html?id=3"
+                    class="stretched-link">Đọc tiếp</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer dùng lại cho tất cả trang -->
+    <footer class="pt-5 pb-3">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <h2 class="h5 fw-bold">HDTTT Bookstore</h2>
+            <p class="small mb-0">Website giới thiệu và bán sách
+              trực tuyến phục vụ bài tập lớn môn Hệ Thống Công
+              Nghệ Web.</p>
+          </div>
+          <div class="col-md-2">
+            <h3 class="h6">Liên kết</h3>
+            <ul class="list-unstyled small footer-links">
+              <li><a href="index.html">Trang chủ</a></li>
+              <li><a href="products.html">Sách</a></li>
+              <li><a href="cart.html">Giỏ hàng</a></li>
+              <li><a href="orders.html">Đơn hàng</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h3 class="h6">Hỗ trợ</h3>
+            <ul class="list-unstyled small footer-links">
+              <li><a href="login.html">Đăng nhập</a></li>
+              <li><a href="register.html">Đăng ký</a></li>
+              <li><a href="checkout.html">Thanh toán</a></li>
+              <li><a href="sitemap.html">Sitemap</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h3 class="h6">Liên hệ</h3>
+            <p class="small mb-1">Email: huydattamtrieutri@gmail.com</p>
+            <p class="small mb-1">Điện thoại: 0912 345 678</p>
+            <p class="small mb-0">TP. Hồ Chí Minh</p>
+          </div>
+        </div>
+        <hr class="border-light opacity-25 my-4">
+        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore.
+          Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
+      </div>
+    </footer>
+
+    <!-- JS dùng offline theo yêu cầu bài tập lớn -->
+    <script src="../js/jquery-4.0.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
