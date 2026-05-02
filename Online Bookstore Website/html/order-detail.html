@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
+    <title>HDTTT Bookstore - Tiêu đề trang</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center fw-bold"
+            href="index.html">
+            <img src="../img/logo.png" alt="Logo HDTTT Bookstore"
+              class="logo me-2">
+            <span>HDTTT Bookstore</span>
+          </a>
+
+          <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false"
+            aria-label="Mở menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+              <li class="nav-item"><a class="nav-link" href="index.html">Trang
+                  chủ</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="products.html">Sách</a></li>
+              <li class="nav-item"><a class="nav-link" href="news.html">Tin
+                  tức</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">Giới
+                  thiệu</a></li>
+              <li class="nav-item"><a class="nav-link"
+                  href="sitemap.html">Sitemap</a></li>
+              <li class="nav-item ms-lg-2">
+                <a class="nav-link position-relative" href="cart.html"
+                  aria-label="Giỏ hàng">
+                  Giỏ hàng
+                  <span class="badge badge-cart rounded-pill ms-1"
+                    id="cart-count">0</span>
+                </a>
+              </li>
+              <li class="nav-item ms-lg-3"><a
+                  class="btn btn-outline-light btn-sm px-3"
+                  href="login.html">Đăng nhập</a></li>
+              <li class="nav-item ms-lg-2"><a
+                  class="btn btn-light btn-sm px-3 text-primary-custom"
+                  href="register.html">Đăng ký</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="py-5"> <!-- tương tự padding trên + dưới -->
+  <div class="container">
+
+    <!-- TIÊU ĐỀ -->
+    <h1 class="h4 fw-bold mb-4">
+      Chi tiết hóa đơn <span id="order-id"></span>
+    </h1>
+
+    <!-- THÔNG TIN CHUNG -->
+    <div class="row g-4">
+
+      <!-- Thông tin khách hàng -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body" id="customer-info">
+          </div>
+        </div>
+      </div>
+
+      <!-- Thông tin đơn hàng -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body" id="order-info">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DANH SÁCH SẢN PHẨM -->
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-body">
+
+        <h5 class="card-title mb-3">Sản phẩm trong đơn</h5>
+
+        <!-- table-responsive để không vỡ trên mobile -->
+        <div class="table-responsive">
+          <table class="table align-middle">
+
+            <thead class="table-light">
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+              </tr>
+            </thead>
+
+            <tbody id="order-items">
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TỔNG TIỀN -->
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-body d-flex justify-content-between">
+
+        <h5 class="mb-0">Tổng cộng</h5>
+
+        <h4 class="mb-0 text-danger" id="total-price"></h4>
+
+      </div>
+    </div>
+
+    <!-- NÚT QUAY LẠI -->
+    <div class="mt-4">
+      <a href="orders.html" class="btn btn-outline-secondary">
+        ← Quay lại danh sách
+      </a>
+    </div>
+
+  </div>
+</main>
+
+    <footer class="pt-5 pb-3">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <h2 class="h5 fw-bold">HDTTT Bookstore</h2>
+            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến
+              phục vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
+          </div>
+          <div class="col-md-2">
+            <h3 class="h6">Liên kết</h3>
+            <ul class="list-unstyled small footer-links">
+              <li><a href="index.html">Trang chủ</a></li>
+              <li><a href="products.html">Sách</a></li>
+              <li><a href="cart.html">Giỏ hàng</a></li>
+              <li><a href="orders.html">Đơn hàng</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h3 class="h6">Hỗ trợ</h3>
+            <ul class="list-unstyled small footer-links">
+              <li><a href="login.html">Đăng nhập</a></li>
+              <li><a href="register.html">Đăng ký</a></li>
+              <li><a href="checkout.html">Thanh toán</a></li>
+              <li><a href="sitemap.html">Sitemap</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h3 class="h6">Liên hệ</h3>
+            <p class="small mb-1">Email: hdtttbookstore@example.com</p>
+            <p class="small mb-1">Điện thoại: 0123 456 789</p>
+            <p class="small mb-0">TP. Hồ Chí Minh</p>
+          </div>
+        </div>
+        <hr class="border-light opacity-25 my-4">
+        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore.
+          Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
+      </div>
+    </footer>
+
+    <script src="../js/jquery-4.0.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>

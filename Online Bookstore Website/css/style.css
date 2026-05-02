@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+    padding-top: 80px; 
+}
+
+:root {
+    --primary-color: #27ae60;
+    --accent-color: #e74c3c;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #27ae60, #219150);
+}
+
+.navbar-brand span {
+    color: #fff;
+}
+
+.navbar .nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    transition: 0.2s;
+}
+
+.navbar .nav-link:hover {
+    color: #fff !important;
+}
+
+.logo {
+    height: 40px;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.badge {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn {
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+#total-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.input-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: none;
+}
+
+footer {
+    background-color: #212529;
+    color: #ccc;
+}
+
+footer a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #fff;
+}
+
+.book-card {
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.book-card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .navbar-brand span {
+        font-size: 16px;
+    }
+}
