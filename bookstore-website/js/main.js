@@ -28,7 +28,8 @@ $(document).ready(function () {
 
     if (typeof renderCartPage === "function") renderCartPage();
     if (typeof renderCheckoutPage === "function") renderCheckoutPage();
-
+    if (typeof renderOrdersPage === "function") renderOrdersPage();
+    if (typeof renderOrderDetailPage === "function") renderOrderDetailPage();
     checkLoginStatus();
 
 });
@@ -1111,4 +1112,239 @@ function renderCheckoutPage() {
         alert(`🎉 Đặt hàng thành công!\nMã đơn hàng của bạn là: ${orderId}\nChúng tôi sẽ sớm liên hệ để giao hàng.`);
         window.location.href = 'index.html'; // Hoặc chuyển sang trang orders.html nếu bạn đã làm xong
     });
+}
+
+// ==========================================
+// XỬ LÝ TRANG DANH SÁCH ĐƠN HÀNG (ORDERS)
+// ==========================================
+
+function renderOrdersPage() {
+    const ordersTable = $('#orders-table');
+    if (ordersTable.length === 0) return; // Chỉ chạy nếu đang ở trang orders.html
+
+    // Cấu hình phân trang
+    const ORDERS_PER_PAGE = 5;
+    let currentPage = 1;
+    let currentFilter = 'all';
+    let searchKeyword = '';
+
+    // Hàm render bảng đơn hàng
+    function renderTable() {
+        // 1. Lấy dữ liệu từ LocalStorage
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        // 2. Lọc theo từ khóa tìm kiếm (Mã đơn hàng)
+        if (searchKeyword !== '') {
+            orders = orders.filter(order => order.id.toLowerCase().includes(searchKeyword));
+        }
+
+        // 3. Lọc theo trạng thái
+        // Mapping data-status html với text trạng thái trong orderStatus (data.js)
+        const statusMap = {
+            'pending': orderStatus.pending,       // "Chờ xử lý"
+            'shipping': orderStatus.processing,   // "Đang xử lý/Đang giao" (Tùy data.js)
+            'done': orderStatus.completed,        // "Hoàn thành"
+            'cancel': orderStatus.cancelled       // "Đã hủy"
+        };
+
+        if (currentFilter !== 'all') {
+            let statusText = statusMap[currentFilter];
+            orders = orders.filter(order => order.status === statusText);
+        }
+
+        // 4. Phân trang
+        const totalPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
+        // Đảm bảo currentPage không vượt quá tổng số trang
+        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+        const startIndex = (currentPage - 1) * ORDERS_PER_PAGE;
+        const ordersOnPage = orders.slice(startIndex, startIndex + ORDERS_PER_PAGE);
+
+        // 5. Hiển thị dữ liệu
+        ordersTable.empty();
+
+        if (orders.length === 0) {
+            ordersTable.html(`
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        Không tìm thấy đơn hàng nào phù hợp.
+                    </td>
+                </tr>
+            `);
+        } else {
+            ordersOnPage.forEach(order => {
+                // Xác định màu badge (nhãn) dựa trên trạng thái
+                let badgeClass = 'bg-secondary';
+                if (order.status === orderStatus.pending) badgeClass = 'bg-warning text-dark';
+                else if (order.status === orderStatus.completed) badgeClass = 'bg-success';
+                else if (order.status === orderStatus.cancelled) badgeClass = 'bg-danger';
+                else badgeClass = 'bg-info text-dark';
+
+                let tr = `
+            <tr>
+                <td class="order-id-text">${order.id}</td>
+                <td class="fw-semibold">${order.customerName}</td>
+                <td>${order.date}</td>
+                <td class="fw-bold text-primary-custom">${formatPrice(order.total)}</td>
+                <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                <td class="text-center">
+                    <a href="order-detail.html?id=${order.id}" class="btn btn-sm btn-outline-primary">
+                        Chi tiết
+                    </a>
+                </td>
+            </tr>
+        `;
+                ordersTable.append(tr);
+            });
+        }
+
+        // 6. Hiển thị thanh phân trang
+        renderPagination(totalPages);
+    }
+
+    // Hàm render các nút phân trang
+    function renderPagination(totalPages) {
+        const pagination = $('#pagination');
+        pagination.empty();
+
+        if (totalPages <= 1) return;
+
+        // Nút "Trước"
+        pagination.append(`
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">Trước</a>
+            </li>
+        `);
+
+        // Các số trang
+        for (let i = 1; i <= totalPages; i++) {
+            pagination.append(`
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `);
+        }
+
+        // Nút "Sau"
+        pagination.append(`
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">Sau</a>
+            </li>
+        `);
+    }
+
+    // Lắng nghe sự kiện click phân trang
+    $('#pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        let selectedPage = $(this).data('page');
+        if (selectedPage) {
+            currentPage = selectedPage;
+            renderTable();
+        }
+    });
+
+    // Lắng nghe sự kiện Tìm kiếm theo mã đơn
+    $('#search-input').on('keyup', function () {
+        searchKeyword = $(this).val().trim().toLowerCase();
+        currentPage = 1; // Reset về trang 1 khi tìm kiếm
+        renderTable();
+    });
+
+    // Lắng nghe sự kiện click Bộ lọc trạng thái
+    $('#filter-buttons button').on('click', function () {
+        // Đổi màu nút đang active
+        $('#filter-buttons button').removeClass('active');
+        $(this).addClass('active');
+
+        currentFilter = $(this).data('status');
+        currentPage = 1; // Reset về trang 1 khi lọc
+        renderTable();
+    });
+
+    // Chạy lần đầu tiên khi load trang
+    renderTable();
+}
+
+// ==========================================
+// XỬ LÝ TRANG CHI TIẾT ĐƠN HÀNG (ORDER DETAIL)
+// ==========================================
+function renderOrderDetailPage() {
+    // 1. Kiểm tra xem có đang ở trang order-detail không
+    const orderIdSpan = $('#order-id');
+    if (orderIdSpan.length === 0) return;
+
+    // 2. Lấy mã đơn hàng (orderId) từ URL
+    // Ví dụ: order-detail.html?id=DH-123456
+    const orderId = getUrlParam('id');
+    if (!orderId) {
+        alert("Không tìm thấy mã đơn hàng!");
+        window.location.href = 'orders.html';
+        return;
+    }
+
+    // 3. Tìm đơn hàng trong LocalStorage
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const order = orders.find(o => o.id === orderId);
+
+    if (!order) {
+        $('.container').html(`
+            <div class="alert alert-danger text-center my-5">
+                <h4>Lỗi!</h4>
+                <p>Đơn hàng <strong>${orderId}</strong> không tồn tại trong hệ thống.</p>
+                <a href="orders.html" class="btn btn-primary mt-3">Quay lại danh sách</a>
+            </div>
+        `);
+        return;
+    }
+
+    // 4. Hiển thị thông tin chung
+    orderIdSpan.text('#' + order.id);
+
+    // Điền thông tin khách hàng (Thanh trống thứ nhất)
+    $('#customer-info').html(`
+        <h5 class="fw-bold mb-3" style="color: var(--primary-color);">Thông tin nhận hàng</h5>
+        <p class="mb-1"><strong>Người nhận:</strong> ${order.customerName}</p>
+        <p class="mb-1"><strong>Điện thoại:</strong> ${order.phone}</p>
+        <p class="mb-0"><strong>Địa chỉ:</strong> ${order.address}</p>
+    `);
+
+    // Điền thông tin hóa đơn (Thanh trống thứ hai)
+    $('#order-info').html(`
+        <h5 class="fw-bold mb-3" style="color: var(--primary-color);">Thông tin đơn hàng</h5>
+        <p class="mb-1"><strong>Ngày đặt:</strong> ${order.date}</p>
+        <p class="mb-1"><strong>Thanh toán:</strong> ${order.payment}</p>
+        <p class="mb-0"><strong>Trạng thái:</strong> <span class="badge bg-warning text-dark">${order.status}</span></p>
+    `);
+
+    // 5. Hiển thị danh sách sản phẩm trong bảng
+    const orderItemsTable = $('#order-items');
+    orderItemsTable.empty();
+
+    order.items.forEach(function (item) {
+        const book = getBookById(item.id); // Lấy thông tin sách từ data.js
+        if (!book) return;
+
+        const itemTotal = book.price * item.quantity;
+
+        let tr = `
+            <tr>
+                <td class="ps-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${book.image}" alt="${book.title}" class="rounded shadow-sm" style="width: 45px; height: 60px; object-fit: cover;">
+                        <div>
+                            <p class="mb-0 fw-bold small">${book.title}</p>
+                            <small class="text-muted">Mã: HDTTT-${String(book.id).padStart(3, '0')}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${formatPrice(book.price)}</td>
+                <td>${item.quantity}</td>
+                <td class="pe-3 fw-bold">${formatPrice(itemTotal)}</td>
+            </tr>
+        `;
+        orderItemsTable.append(tr);
+    });
+
+    // 6. Hiển thị tổng cộng
+    $('#total-price').text(formatPrice(order.total));
 }
