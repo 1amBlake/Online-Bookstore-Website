@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
-    <title>HDTTT Bookstore - Tiêu đề trang</title>
+      content="HDTTT Bookstore - Giỏ hàng của bạn">
+    <title>HDTTT Bookstore - Giỏ hàng của bạn</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -41,19 +41,21 @@
               <li class="nav-item"><a class="nav-link"
                   href="sitemap.html">Sitemap</a></li>
               <li class="nav-item ms-lg-2">
-                <a class="nav-link position-relative" href="cart.html"
+                <a class="nav-link active position-relative" href="cart.html"
                   aria-label="Giỏ hàng">
                   Giỏ hàng
                   <span class="badge badge-cart rounded-pill ms-1"
                     id="cart-count">0</span>
                 </a>
               </li>
-              <li class="nav-item ms-lg-3"><a
-                  class="btn btn-outline-light btn-sm px-3"
-                  href="login.html">Đăng nhập</a></li>
-              <li class="nav-item ms-lg-2"><a
-                  class="btn btn-light btn-sm px-3 text-primary-custom"
-                  href="register.html">Đăng ký</a></li>
+              <li class="nav-item ms-lg-3">
+                <a class="btn btn-outline-light btn-sm px-3"
+                  href="login.html">Đăng nhập</a>
+              </li>
+              <li class="nav-item ms-lg-2">
+                <a class="btn btn-light btn-sm px-3 text-primary-custom"
+                  href="register.html">Đăng ký</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -61,15 +63,172 @@
     </header>
 
     <main>
+
+      <!-- BREADCRUMB -->
+      <section class="breadcrumb-section">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="index.html">Trang
+                  chủ</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Giỏ
+                hàng</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <!-- CART SECTION -->
+      <section class="py-5">
+        <div class="container">
+
+          <div class="mb-4">
+            <h1 class="h3 fw-bold mb-1" style="color: var(--primary-color);">Giỏ
+              hàng của bạn</h1>
+            <p class="text-muted mb-0">Kiểm tra lại sản phẩm trước khi thanh
+              toán.</p>
+          </div>
+
+          <!-- CÓ SẢN PHẨM -->
+          <div id="cart-has-items">
+            <div class="row g-4">
+
+              <!-- Bảng giỏ hàng -->
+              <div class="col-lg-8">
+                <div class="card p-0 shadow-sm">
+                  <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="col" style="width:90px;"></th>
+                          <th scope="col">Sản phẩm</th>
+                          <th scope="col" class="text-center">Số lượng</th>
+                          <th scope="col" class="text-end">Đơn giá</th>
+                          <th scope="col" class="text-end">Thành tiền</th>
+                          <th scope="col" style="width:50px;"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="cart-items-body">
+
+                        <!-- sach trong gio nhe anh HUY -->
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Nút dưới bảng -->
+                <div
+                  class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+                  <a href="products.html"
+                    class="btn btn-outline-primary btn-sm px-3">&#8592; Tiếp tục
+                    mua sắm</a>
+                  <button class="btn btn-outline-secondary btn-sm px-3"
+                    id="btn-clear-cart">Xóa tất cả</button>
+                </div>
+              </div>
+
+              <!-- Tóm tắt đơn hàng -->
+              <div class="col-lg-4">
+                <div class="card shadow-sm p-4"
+                  style="position:sticky; top:90px;">
+                  <h2 class="h6 fw-bold pb-3 mb-3"
+                    style="color:var(--primary-color); border-bottom:2px solid var(--border-color);">Tóm
+                    tắt đơn hàng</h2>
+
+                  <!-- Mã giảm giá -->
+                  <p class="small text-muted mb-1">Mã giảm giá</p>
+                  <div class="input-group input-group-sm mb-3">
+                    <input type="text" class="form-control" id="coupon-input"
+                      placeholder="Nhập mã giảm giá..."
+                      aria-label="Mã giảm giá">
+                    <button class="btn btn-outline-primary"
+                      id="btn-apply-coupon">Áp dụng</button>
+                  </div>
+
+                  <!-- Note ship -->
+                  <div class="alert alert-warning py-2 px-3 small mb-3"
+                    role="alert">
+                    &#128666; <strong>Miễn phí vận chuyển</strong> cho đơn hàng
+                    từ 300.000&#8363;
+                  </div>
+
+                  <!-- Tổng -->
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Tạm tính</span>
+                    <span id="subtotal">????&#8363;</span>
+                  </div>
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Phí vận chuyển</span>
+                    <span id="shipping-fee">????&#8363;</span>
+                  </div>
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Giảm giá
+                      <span class="badge bg-category ms-1" id="coupon-label"
+                        style="display:none; font-size:0.72rem;">????</span>
+                    </span>
+                    <span id="discount"
+                      style="color:var(--success-color);">&#8722;0&#8363;</span>
+                  </div>
+                  <hr style="border-color:var(--border-color);">
+                  <div class="d-flex justify-content-between fw-bold mb-3"
+                    style="color:var(--accent-color); font-size:1.05rem;">
+                    <span>Tổng cộng</span>
+                    <span id="grand-total">????&#8363;</span>
+                  </div>
+
+                  <a href="checkout.html"
+                    class="btn btn-primary w-100 py-2 fw-bold"
+                    id="btn-checkout">
+                    Tiến hành thanh toán &#8594;
+                  </a>
+                  <p class="text-center small text-muted mt-3 mb-0">&#128274;
+                    Thanh toán an toàn &amp; bảo mật</p>
+                </div>
+              </div>
+
+            </div>
+          </div><!-- /#cart-has-items -->
+
+          <!-- GIỎ HÀNG TRỐNG -->
+          <div id="cart-empty" class="text-center py-5" style="display:none;">
+            <p class="display-1 mb-3" style="opacity:0.35;">&#128722;</p>
+            <h2 class="h4 fw-bold mb-2" style="color:var(--primary-color);">Giỏ
+              hàng trống</h2>
+            <p class="text-muted mb-4">Bạn chưa thêm sản phẩm nào vào giỏ
+              hàng.</p>
+            <a href="products.html" class="btn btn-primary px-5 py-2">Khám phá
+              sách ngay</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- GỢI Ý SÁCH -->
+      <section class="py-5 bg-light-custom">
+        <div class="container">
+          <div class="section-heading text-center mb-4">
+            <p class="section-subtitle">Có thể bạn cũng thích</p>
+            <h2 class="h4 fw-bold">Sách gợi ý</h2>
+          </div>
+          <div class="row g-3">
+
+            <!-- sach goi y nhe anh HUY -->
+
+          </div>
+        </div>
+      </section>
+
     </main>
 
+    <!-- FOOTER -->
     <footer class="pt-5 pb-3">
       <div class="container">
         <div class="row g-4">
           <div class="col-md-4">
             <h2 class="h5 fw-bold">HDTTT Bookstore</h2>
-            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến
-              phục vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
+            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến phục
+              vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
           </div>
           <div class="col-md-2">
             <h3 class="h6">Liên kết</h3>
@@ -97,8 +256,8 @@
           </div>
         </div>
         <hr class="border-light opacity-25 my-4">
-        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore.
-          Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
+        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore. Nhóm 2 -
+          Hệ Thống Công Nghệ Web.</p>
       </div>
     </footer>
 

@@ -639,3 +639,4 @@ function searchBooks(keyword) {
 function getBookImage(bookId) {
     return "../img/book_img/book_" + bookId + ".jpg";
 }
+

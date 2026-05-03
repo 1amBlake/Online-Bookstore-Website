@@ -4,11 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
-    <title>HDTTT Bookstore - Tiêu đề trang</title>
+      content="HDTTT Bookstore - Quản lý đơn hàng của bạn">
+    <title>HDTTT Bookstore - Đơn hàng của bạn</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+      /* Class tiện ích: Giới hạn chiều cao và độ rộng */
+      .min-vh-50 {
+        min-height: 50vh;
+      }
+      .search-input-sm {
+        max-width: 250px;
+      }
+
+      /* Làm nổi bật cột Mã đơn hàng trong bảng */
+      .order-id-text {
+        font-family: monospace;
+        font-weight: 700;
+        color: var(--accent-color);
+        font-size: 1.05rem;
+      }
+
+      /* Đổi màu nền nhẹ (màu thứ cấp) khi hover chuột qua dòng đơn hàng */
+      .table-hover tbody tr:hover {
+        background-color: rgba(212, 163, 115, 0.08) !important;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -21,10 +44,9 @@
             <span>HDTTT Bookstore</span>
           </a>
 
-          <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-            aria-controls="mainNavbar" aria-expanded="false"
-            aria-label="Mở menu">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+            aria-expanded="false" aria-label="Mở menu">
             <span class="navbar-toggler-icon"></span>
           </button>
 
@@ -61,6 +83,74 @@
     </header>
 
     <main>
+      <section class="breadcrumb-section">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="index.html">Trang
+                  chủ</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Đơn hàng
+                của bạn</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section class="py-5 bg-light-custom">
+        <div class="container min-vh-50">
+
+          <div
+            class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+              <h1 class="h3 fw-bold mb-1 text-primary-custom">Danh sách hóa
+                đơn</h1>
+              <p class="text-muted mb-0 small">Theo dõi trạng thái các đơn hàng
+                bạn đã đặt.</p>
+            </div>
+
+            <input type="text" id="search-input"
+              class="form-control search-input-sm" placeholder="Tìm mã đơn...">
+          </div>
+
+          <div class="mb-4 d-flex flex-wrap gap-2" id="filter-buttons">
+            <button class="btn btn-primary btn-sm" data-status="all">Tất
+              cả</button>
+            <button class="btn btn-outline-warning btn-sm"
+              data-status="pending">Chờ xử lý</button>
+            <button class="btn btn-outline-info btn-sm"
+              data-status="shipping">Đang giao</button>
+            <button class="btn btn-outline-success btn-sm"
+              data-status="done">Hoàn thành</button>
+            <button class="btn btn-outline-danger btn-sm"
+              data-status="cancel">Đã hủy</button>
+          </div>
+
+          <div class="card shadow-sm border-0 rounded-3 p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="ps-3">Mã đơn</th>
+                    <th scope="col">Khách hàng</th>
+                    <th scope="col">Ngày đặt</th>
+                    <th scope="col">Tổng tiền</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col" class="text-center pe-3">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-table">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <nav class="mt-4" aria-label="Phân trang đơn hàng">
+            <ul class="pagination justify-content-center mb-0" id="pagination">
+            </ul>
+          </nav>
+
+        </div>
+      </section>
     </main>
 
     <footer class="pt-5 pb-3">
@@ -68,8 +158,8 @@
         <div class="row g-4">
           <div class="col-md-4">
             <h2 class="h5 fw-bold">HDTTT Bookstore</h2>
-            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến
-              phục vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
+            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến phục
+              vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
           </div>
           <div class="col-md-2">
             <h3 class="h6">Liên kết</h3>
@@ -97,8 +187,8 @@
           </div>
         </div>
         <hr class="border-light opacity-25 my-4">
-        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore.
-          Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
+        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore. Nhóm 2 -
+          Hệ Thống Công Nghệ Web.</p>
       </div>
     </footer>
 

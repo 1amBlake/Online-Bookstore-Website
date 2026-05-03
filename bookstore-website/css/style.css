@@ -433,3 +433,12 @@ footer a:hover {
     border-radius: 24px;
   }
 }
+
+.min-vh-50 {
+  min-height: 50vh;
+}
+
+/* Giới hạn độ rộng ô tìm kiếm trên màn hình lớn */
+.search-input-sm {
+  max-width: 250px;
+}
