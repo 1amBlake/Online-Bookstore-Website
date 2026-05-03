@@ -7,7 +7,8 @@
 $(document).ready(function () {
     // Gắn class active cho menu tương ứng với trang hiện tại
     setActiveNavLink();
-
+    renderLatestNewsIndex();
+    renderAllNewsPage();
     // Cập nhật số lượng sản phẩm trong giỏ hàng ở navbar
     updateCartCount();
 
@@ -1347,4 +1348,75 @@ function renderOrderDetailPage() {
 
     // 6. Hiển thị tổng cộng
     $('#total-price').text(formatPrice(order.total));
+}
+
+// =====================================================
+// Xử lý hiển thị chi tiết tin tức bằng Modal
+// =====================================================
+function showNewsDetail(newsId) {
+    // 1. Tìm tin tức trong mảng newsList (từ data.js)
+    const news = newsList.find(item => item.id === newsId);
+
+    if (news) {
+        // 2. Điền dữ liệu vào các phần tử trong Modal
+        $('#modal-news-title').text(news.title);
+        $('#modal-news-img').attr('src', news.image);
+        $('#modal-news-date').text(news.date);
+        $('#modal-news-author').text(news.author || "HDTTT Bookstore");
+        $('#modal-news-content').html(news.content);
+
+        // 3. Hiển thị Modal (Sử dụng thư viện Bootstrap đã nhúng offline)
+        const myModal = new bootstrap.Modal(document.getElementById('newsModal'));
+        myModal.show();
+    } else {
+        alert("Không tìm thấy nội dung tin tức này!");
+    }
+}
+
+function renderLatestNewsIndex() {
+    const newsContainer = $('#latest-news-container');
+    if (newsContainer.length === 0 || typeof newsList === 'undefined') return;
+
+    // Lấy 3 bài tin tức đầu tiên
+    const latestNews = newsList.slice(0, 3);
+    let html = '';
+
+    latestNews.forEach(news => {
+        html += `
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden news-card">
+                    <img src="${news.image}" class="card-img-top" alt="${news.title}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <small class="text-muted">${news.date}</small>
+                        <h5 class="card-title fw-bold mt-2">${news.title}</h5>
+                        <p class="card-text text-muted small">${news.summary.substring(0, 100)}...</p>
+                        <a href="news.html" class="btn btn-outline-primary-custom btn-sm">Đọc tiếp</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    newsContainer.html(html);
+}
+function renderAllNewsPage() {
+    const container = $('#news-list'); // ID trong news.html
+    if (container.length === 0) return;
+
+    let html = "";
+    newsList.forEach(news => {
+        html += `
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm news-card">
+                    <img src="${news.image}" class="card-img-top" alt="${news.title}">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">${news.title}</h5>
+                        <p class="text-muted small">${news.summary}</p>
+                        <button class="btn btn-primary btn-sm" onclick="showNewsDetail(${news.id})">Xem chi tiết</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    container.html(html);
 }
