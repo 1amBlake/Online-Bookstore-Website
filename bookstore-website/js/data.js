@@ -545,20 +545,36 @@ const newsList = [
     {
         id: 1,
         title: "5 cuốn sách nên đọc để phát triển bản thân",
-        image: "../img/news-1.jpg",
+        image: "../img/news_img/news_1.jpg",
         summary: "Gợi ý những cuốn sách hữu ích giúp bạn cải thiện tư duy, kỹ năng và thói quen sống.",
-        content: "Đọc sách là một trong những cách hiệu quả để phát triển bản thân...",
+        content: `
+            <p>Đọc sách là một trong những cách hiệu quả nhất để tiếp cận tri thức và phát triển bản thân. Dưới đây là 5 đầu sách mà HDTTT Bookstore khuyên bạn nên có trong tủ sách:</p>
+            <ul>
+                <li><strong>Đắc Nhân Tâm:</strong> Nghệ thuật giao tiếp và thu phục lòng người.</li>
+                <li><strong>Atomic Habits:</strong> Cách xây dựng những thói quen nhỏ để tạo nên thay đổi lớn.</li>
+                <li><strong>Tư Duy Nhanh Và Chậm:</strong> Khám phá cách bộ não chúng ta vận hành.</li>
+                <li><strong>Nhà Giả Kim:</strong> Hành trình đi tìm kho báu và ước mơ của mỗi người.</li>
+                <li><strong>Tuổi Trẻ Đáng Giá Bao Nhiêu:</strong> Những lời khuyên chân thành cho người trẻ đang định vị bản thân.</li>
+            </ul>
+            <p>Hãy bắt đầu thói quen đọc ít nhất 20 trang mỗi ngày để thấy sự khác biệt sau một tháng nhé!</p>
+        `,
         date: "2026-04-01",
-        author: "HDTTT Bookstore"
+        author: "Huy"
     },
     {
         id: 2,
         title: "Lợi ích của việc đọc sách mỗi ngày",
-        image: "../img/news-2.jpg",
+        image: "../img/news_img/news_2.jpg",
         summary: "Đọc sách hằng ngày giúp mở rộng kiến thức, giảm căng thẳng và tăng khả năng tập trung.",
-        content: "Việc duy trì thói quen đọc sách mỗi ngày mang lại nhiều lợi ích...",
+        content: `
+            <p>Khoa học đã chứng minh rằng chỉ cần 6 phút đọc sách mỗi ngày có thể giúp giảm đến 68% mức độ căng thẳng. Việc duy trì thói quen này mang lại những giá trị vô hình:</p>
+            <p><strong>1. Mở rộng vốn từ vựng:</strong> Càng đọc nhiều, bạn càng biết thêm nhiều từ ngữ và cách diễn đạt tinh tế.</p>
+            <p><strong>2. Rèn luyện sự tập trung:</strong> Trong thời đại của video ngắn, việc tập trung vào một cuốn sách giúp não bộ học cách kiên nhẫn hơn.</p>
+            <p><strong>3. Kích thích trí tưởng tượng:</strong> Khác với phim ảnh, sách buộc bạn phải tự xây dựng hình ảnh trong tâm trí, giúp tăng khả năng sáng tạo.</p>
+            <p>Đừng ngần ngại ghé thăm HDTTT Bookstore để tìm cho mình một "người bạn đồng hành" phù hợp nhất!</p>
+        `,
         date: "2026-04-05",
-        author: "HDTTT Bookstore"
+        author: "Huy"
     }
 ];
 
