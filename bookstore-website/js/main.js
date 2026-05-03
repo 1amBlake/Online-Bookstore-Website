@@ -25,6 +25,8 @@ $(document).ready(function () {
 
     // Xử lý nút thêm vào giỏ hàng ở trang product-detail.html
     handleAddToCart();
+
+    checkLoginStatus();
 });
 
 
@@ -691,4 +693,150 @@ function addToCart(bookId, quantity) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Thêm đoạn này vào main.js hoặc script tag trong register.html
+$(document).ready(function () {
+    // Xử lý sự kiện submit form Đăng ký
+    $('form[action="login.html"]').on('submit', function (e) {
+        e.preventDefault(); // Ngăn load lại trang
+
+        // 1. Lấy dữ liệu từ các ô input
+        const fullName = $('#registerName').val().trim();
+        const email = $('#registerEmail').val().trim();
+        const password = $('#registerPassword').val();
+        const confirmPassword = $('#registerConfirmPassword').val();
+        const termsAccepted = $('#termsCheck').is(':checked');
+
+        // 2. Kiểm tra dữ liệu (Validation)
+        if (password !== confirmPassword) {
+            alert("Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại!");
+            return;
+        }
+
+        if (!termsAccepted) {
+            alert("Bạn phải đồng ý với điều khoản dịch vụ để đăng ký.");
+            return;
+        }
+
+        // 3. Kiểm tra trùng lặp Email
+        // Lấy danh sách user từ data.js và từ LocalStorage (nếu có)
+        const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+        const allUsers = [...users, ...localUsers]; // Gộp cả user mẫu và user mới đăng ký
+
+        const isExisted = allUsers.some(user => user.email === email);
+        if (isExisted) {
+            alert("Email này đã được sử dụng. Vui lòng chọn email khác!");
+            return;
+        }
+
+        // 4. Tạo đối tượng người dùng mới
+        const newUser = {
+            id: Date.now(), // Tạo ID duy nhất bằng timestamp
+            fullName: fullName,
+            email: email,
+            password: password,
+            role: "user"
+        };
+
+        // 5. Lưu vào LocalStorage
+        localUsers.push(newUser);
+        localStorage.setItem('localUsers', JSON.stringify(localUsers));
+
+        // 6. Thông báo và chuyển hướng
+        alert("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
+        window.location.href = 'login.html';
+    });
+});
+
+// Thêm đoạn này vào main.js hoặc script tag trong login.html
+$(document).ready(function () {
+    // Xử lý sự kiện submit form Đăng nhập
+    $('form[action="index.html"]').on('submit', function (e) {
+        e.preventDefault(); // Ngăn load lại trang
+
+        const email = $('#loginEmail').val().trim();
+        const password = $('#loginPassword').val();
+        const rememberMe = $('#rememberMe').is(':checked');
+
+        // 1. Lấy tất cả người dùng (từ file data.js và từ bộ nhớ LocalStorage)
+        const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+        const allUsers = [...users, ...localUsers];
+
+        // 2. Tìm kiếm người dùng khớp thông tin
+        const userFound = allUsers.find(u => u.email === email && u.password === password);
+
+        if (userFound) {
+            // 3. Đăng nhập thành công
+            // Lưu trạng thái đăng nhập vào LocalStorage
+            localStorage.setItem('currentUser', JSON.stringify({
+                fullName: userFound.fullName,
+                email: userFound.email,
+                role: userFound.role
+            }));
+
+            if (rememberMe) {
+                localStorage.setItem('rememberedEmail', email);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+
+            alert("Chào mừng " + userFound.fullName + " quay trở lại!");
+            window.location.href = 'index.html';
+        } else {
+            // 4. Sai thông tin
+            alert("Email hoặc mật khẩu không chính xác. Vui lòng thử lại!");
+        }
+    });
+
+    // Tự động điền email nếu người dùng đã chọn "Ghi nhớ tài khoản" trước đó
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+        $('#loginEmail').val(savedEmail);
+        $('#rememberMe').prop('checked', true);
+    }
+});
+
+$(document).ready(function () {
+    // Các hàm cũ của bạn...
+    checkLoginStatus();
+});
+
+// =====================================================
+// Hàm kiểm tra trạng thái đăng nhập (Phiên bản đã Fix lỗi lặp)
+// =====================================================
+function checkLoginStatus() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const navbarNav = $('.navbar-nav');
+
+    if (currentUser) {
+        // Xóa nút Đăng nhập / Đăng ký cũ
+        navbarNav.find('a[href="login.html"]').parent().remove();
+        navbarNav.find('a[href="register.html"]').parent().remove();
+
+        // CHỐNG NHÂN BẢN: Kiểm tra xem nút Đăng xuất đã tồn tại chưa
+        // Chỉ thêm mới nếu chưa có id="btn-logout" trên Navbar
+        if ($('#btn-logout').length === 0) {
+            const userHtml = `
+                <li class="nav-item ms-lg-3 text-white d-flex align-items-center">
+                    <span class="me-2">Chào, <strong>${currentUser.fullName}</strong></span>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <button class="btn btn-outline-light btn-sm px-3" id="btn-logout">
+                        Đăng xuất
+                    </button>
+                </li>
+            `;
+            navbarNav.append(userHtml);
+
+            // Xử lý sự kiện đăng xuất
+            $('#btn-logout').on('click', function () {
+                if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                    localStorage.removeItem('currentUser');
+                    alert("Đã đăng xuất thành công!");
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    }
 }
