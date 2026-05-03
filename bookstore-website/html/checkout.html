@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-      content="HDTTT Bookstore - Website giới thiệu và bán sách trực tuyến">
-    <title>HDTTT Bookstore - Tiêu đề trang</title>
+      content="HDTTT Bookstore - Thanh toán đơn hàng">
+    <title>HDTTT Bookstore - Thanh toán</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -14,62 +14,275 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm">
         <div class="container">
-          <a class="navbar-brand d-flex align-items-center fw-bold"
-            href="index.html">
-            <img src="../img/logo.png" alt="Logo HDTTT Bookstore"
-              class="logo me-2">
+          <a class="navbar-brand d-flex align-items-center fw-bold" href="index.html">
+            <img src="../img/logo.png" alt="Logo HDTTT Bookstore" class="logo me-2">
             <span>HDTTT Bookstore</span>
           </a>
-
+ 
           <button class="navbar-toggler" type="button"
             data-bs-toggle="collapse" data-bs-target="#mainNavbar"
             aria-controls="mainNavbar" aria-expanded="false"
             aria-label="Mở menu">
             <span class="navbar-toggler-icon"></span>
           </button>
-
+ 
           <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-              <li class="nav-item"><a class="nav-link" href="index.html">Trang
-                  chủ</a></li>
-              <li class="nav-item"><a class="nav-link"
-                  href="products.html">Sách</a></li>
-              <li class="nav-item"><a class="nav-link" href="news.html">Tin
-                  tức</a></li>
-              <li class="nav-item"><a class="nav-link" href="about.html">Giới
-                  thiệu</a></li>
-              <li class="nav-item"><a class="nav-link"
-                  href="sitemap.html">Sitemap</a></li>
+              <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
+              <li class="nav-item"><a class="nav-link" href="products.html">Sách</a></li>
+              <li class="nav-item"><a class="nav-link" href="news.html">Tin tức</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">Giới thiệu</a></li>
+              <li class="nav-item"><a class="nav-link" href="sitemap.html">Sitemap</a></li>
               <li class="nav-item ms-lg-2">
-                <a class="nav-link position-relative" href="cart.html"
-                  aria-label="Giỏ hàng">
+                <a class="nav-link position-relative" href="cart.html" aria-label="Giỏ hàng">
                   Giỏ hàng
-                  <span class="badge badge-cart rounded-pill ms-1"
-                    id="cart-count">0</span>
+                  <span class="badge badge-cart rounded-pill ms-1" id="cart-count">0</span>
                 </a>
               </li>
-              <li class="nav-item ms-lg-3"><a
-                  class="btn btn-outline-light btn-sm px-3"
-                  href="login.html">Đăng nhập</a></li>
-              <li class="nav-item ms-lg-2"><a
-                  class="btn btn-light btn-sm px-3 text-primary-custom"
-                  href="register.html">Đăng ký</a></li>
+              <li class="nav-item ms-lg-3">
+                <a class="btn btn-outline-light btn-sm px-3" href="login.html">Đăng nhập</a>
+              </li>
+              <li class="nav-item ms-lg-2">
+                <a class="btn btn-light btn-sm px-3 text-primary-custom" href="register.html">Đăng ký</a>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
     </header>
-
+ 
     <main>
+ 
+      <!-- BREADCRUMB -->
+      <section class="breadcrumb-section">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+              <li class="breadcrumb-item"><a href="cart.html">Giỏ hàng</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Thanh toán</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+ 
+      <!-- CHECKOUT SECTION -->
+      <section class="py-5">
+        <div class="container">
+ 
+          <div class="mb-4">
+            <h1 class="h3 fw-bold mb-1" style="color: var(--primary-color);">Thanh toán</h1>
+            <p class="text-muted mb-0">Điền thông tin nhận hàng và xác nhận đơn hàng.</p>
+          </div>
+ 
+          <div class="row g-4">
+ 
+            <!-- CỘT TRÁI: Form thông tin -->
+            <div class="col-lg-7">
+ 
+              <!-- Thông tin người nhận -->
+              <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                  <h2 class="h6 fw-bold pb-3 mb-3" style="color:var(--primary-color); border-bottom:2px solid var(--border-color);">
+                    Thông tin người nhận
+                  </h2>
+ 
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label for="full-name" class="form-label fw-semibold small">Họ và tên <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="full-name" placeholder="Nguyễn Văn A" required>
+                      <div class="invalid-feedback">Vui lòng nhập họ và tên.</div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="phone" class="form-label fw-semibold small">Số điện thoại <span class="text-danger">*</span></label>
+                      <input type="tel" class="form-control" id="phone" placeholder="0123 456 789" required>
+                      <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ.</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="email" class="form-label fw-semibold small">Email <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control" id="email" placeholder="example@email.com" required>
+                      <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="address" class="form-label fw-semibold small">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="address" placeholder="Số nhà, tên đường..." required>
+                      <div class="invalid-feedback">Vui lòng nhập địa chỉ nhận hàng.</div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label for="province" class="form-label fw-semibold small">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                      <select class="form-select" id="province" required>
+                        <option value="" selected disabled>Chọn tỉnh/thành</option>
+                        <option>TP. Hồ Chí Minh</option>
+                        <option>Hà Nội</option>
+                        <option>Đà Nẵng</option>
+                        <option>Cần Thơ</option>
+                        <option>Bình Dương</option>
+                        <option>Đồng Nai</option>
+                        <option>Khác</option>
+                      </select>
+                      <div class="invalid-feedback">Vui lòng chọn tỉnh/thành phố.</div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label for="district" class="form-label fw-semibold small">Quận / Huyện <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="district" placeholder="Quận 1" required>
+                      <div class="invalid-feedback">Vui lòng nhập quận/huyện.</div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label for="ward" class="form-label fw-semibold small">Phường / Xã <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="ward" placeholder="Phường Bến Nghé">
+                      </div>
+                    <div class="col-12">
+                      <label for="note" class="form-label fw-semibold small">Ghi chú đơn hàng</label>
+                      <textarea class="form-control" id="note" rows="3"
+                        placeholder="Ghi chú thêm cho người giao hàng (không bắt buộc)..."></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- Phương thức thanh toán -->
+              <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                  <h2 class="h6 fw-bold pb-3 mb-3" style="color:var(--primary-color); border-bottom:2px solid var(--border-color);">
+                    Phương thức thanh toán
+                  </h2>
+ 
+                  <div class="d-flex flex-column gap-2" id="payment-methods">
+ 
+                    <div class="card p-3" style="border-color:var(--border-color); cursor:pointer;">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="payment" id="pay-cod" value="cod" checked>
+                        <label class="form-check-label fw-semibold" for="pay-cod">
+                          &#128181; Thanh toán khi nhận hàng (COD)
+                          <p class="text-muted small fw-normal mb-0 mt-1">Trả tiền mặt khi nhận được sách.</p>
+                        </label>
+                      </div>
+                    </div>
+ 
+                    <div class="card p-3" style="border-color:var(--border-color); cursor:pointer;">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="payment" id="pay-bank" value="bank">
+                        <label class="form-check-label fw-semibold" for="pay-bank">
+                          &#127981; Chuyển khoản ngân hàng
+                          <p class="text-muted small fw-normal mb-0 mt-1">Chuyển khoản trước khi giao hàng. Thông tin tài khoản sẽ được gửi qua email.</p>
+                        </label>
+                      </div>
+                    </div>
+ 
+                    <div class="card p-3" style="border-color:var(--border-color); cursor:pointer;">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="payment" id="pay-momo" value="momo">
+                        <label class="form-check-label fw-semibold" for="pay-momo">
+                          &#128247; Ví điện tử MoMo
+                          <p class="text-muted small fw-normal mb-0 mt-1">Thanh toán qua ví MoMo nhanh chóng và tiện lợi.</p>
+                        </label>
+                      </div>
+                    </div>
+ 
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- Phương thức vận chuyển -->
+              <div class="card shadow-sm">
+                <div class="card-body p-4">
+                  <h2 class="h6 fw-bold pb-3 mb-3" style="color:var(--primary-color); border-bottom:2px solid var(--border-color);">
+                    Phương thức vận chuyển
+                  </h2>
+ 
+                  <div class="d-flex flex-column gap-2">
+ 
+                    <div class="card p-3" style="border-color:var(--border-color); cursor:pointer;">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="shipping" id="ship-standard" value="standard" checked>
+                        <label class="form-check-label fw-semibold" for="ship-standard">
+                          &#128666; Giao hàng tiêu chuẩn &mdash; <span style="color:var(--accent-color);">20.000&#8363;</span>
+                          <p class="text-muted small fw-normal mb-0 mt-1">Dự kiến nhận hàng trong 3&ndash;5 ngày làm việc.</p>
+                        </label>
+                      </div>
+                    </div>
+ 
+                    <div class="card p-3" style="border-color:var(--border-color); cursor:pointer;">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="shipping" id="ship-fast" value="fast">
+                        <label class="form-check-label fw-semibold" for="ship-fast">
+                          &#9889; Giao hàng nhanh &mdash; <span style="color:var(--accent-color);">40.000&#8363;</span>
+                          <p class="text-muted small fw-normal mb-0 mt-1">Dự kiến nhận hàng trong 1&ndash;2 ngày làm việc.</p>
+                        </label>
+                      </div>
+                    </div>
+ 
+                  </div>
+                </div>
+              </div>
+ 
+            </div>
+ 
+            <!-- CỘT PHẢI: Tóm tắt đơn hàng -->
+            <div class="col-lg-5">
+              <div class="card shadow-sm" style="position:sticky; top:90px;">
+                <div class="card-body p-4">
+                  <h2 class="h6 fw-bold pb-3 mb-3" style="color:var(--primary-color); border-bottom:2px solid var(--border-color);">
+                    Đơn hàng của bạn
+                  </h2>
+ 
+                  <!-- Danh sách sản phẩm -->
+                  <div id="checkout-items">
+                    <!-- anh Huy lam js -->
+                  </div>
+ 
+                  <hr style="border-color:var(--border-color);">
+ 
+                  <!-- Tổng tiền -->
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Tạm tính</span>
+                    <span id="checkout-subtotal">????&#8363;</span>
+                  </div>
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Phí vận chuyển</span>
+                    <span id="checkout-shipping">????&#8363;</span>
+                  </div>
+                  <div class="d-flex justify-content-between small mb-2">
+                    <span class="text-muted">Giảm giá
+                      <span class="badge bg-category ms-1" id="checkout-coupon-label" style="display:none;"></span>
+                    </span>
+                    <span id="checkout-discount" style="color:var(--success-color);"></span>
+                  </div>
+ 
+                  <hr style="border-color:var(--border-color);">
+ 
+                  <div class="d-flex justify-content-between fw-bold mb-4" style="color:var(--accent-color); font-size:1.05rem;">
+                    <span>Tổng cộng</span>
+                    <span id="checkout-total">????&#8363;</span>
+                  </div>
+ 
+                  <!-- Nút đặt hàng -->
+                  <button type="button" class="btn btn-primary w-100 py-2 fw-bold" id="btn-place-order">
+                    Đặt hàng &#8594;
+                  </button>
+ 
+                  <a href="cart.html" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
+                    &#8592; Quay lại giỏ hàng
+                  </a>
+ 
+                  <p class="text-center small text-muted mt-3 mb-0">&#128274; Thanh toán an toàn &amp; bảo mật</p>
+                </div>
+              </div>
+            </div>
+ 
+          </div>
+        </div>
+      </section>
+ 
     </main>
-
+ 
+    <!-- FOOTER -->
     <footer class="pt-5 pb-3">
       <div class="container">
         <div class="row g-4">
           <div class="col-md-4">
             <h2 class="h5 fw-bold">HDTTT Bookstore</h2>
-            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến
-              phục vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
+            <p class="small mb-0">Website giới thiệu và bán sách trực tuyến phục vụ bài tập lớn môn Hệ Thống Công Nghệ Web.</p>
           </div>
           <div class="col-md-2">
             <h3 class="h6">Liên kết</h3>
@@ -97,11 +310,10 @@
           </div>
         </div>
         <hr class="border-light opacity-25 my-4">
-        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore.
-          Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
+        <p class="text-center small mb-0">&copy; 2026 HDTTT Bookstore. Nhóm 2 - Hệ Thống Công Nghệ Web.</p>
       </div>
     </footer>
-
+ 
     <script src="../js/jquery-4.0.0.min.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/data.js"></script>
