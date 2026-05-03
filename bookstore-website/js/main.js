@@ -26,7 +26,11 @@ $(document).ready(function () {
     // Xử lý nút thêm vào giỏ hàng ở trang product-detail.html
     handleAddToCart();
 
+    if (typeof renderCartPage === "function") renderCartPage();
+    if (typeof renderCheckoutPage === "function") renderCheckoutPage();
+
     checkLoginStatus();
+
 });
 
 
@@ -803,7 +807,7 @@ $(document).ready(function () {
 });
 
 // =====================================================
-// Hàm kiểm tra trạng thái đăng nhập (Phiên bản đã Fix lỗi lặp)
+// Hàm kiểm tra trạng thái đăng nhập (Đã bổ sung nút Đơn hàng)
 // =====================================================
 function checkLoginStatus() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -818,6 +822,12 @@ function checkLoginStatus() {
         // Chỉ thêm mới nếu chưa có id="btn-logout" trên Navbar
         if ($('#btn-logout').length === 0) {
             const userHtml = `
+                <li class="nav-item ms-lg-2">
+                    <a class="nav-link fw-semibold" href="orders.html" style="color: var(--accent-color);">
+                        📦 Đơn hàng
+                    </a>
+                </li>
+                
                 <li class="nav-item ms-lg-3 text-white d-flex align-items-center">
                     <span class="me-2">Chào, <strong>${currentUser.fullName}</strong></span>
                 </li>
@@ -839,4 +849,266 @@ function checkLoginStatus() {
             });
         }
     }
+}
+
+// ==========================================
+// XỬ LÝ TRANG GIỎ HÀNG (Dựa trên data.js)
+// ==========================================
+
+function renderCartPage() {
+    // Chỉ chạy logic này nếu đang ở trang cart.html
+    const tbody = $('#cart-items-body');
+    if (tbody.length === 0) return;
+
+    // Lấy giỏ hàng từ LocalStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Nếu giỏ hàng trống
+    if (cart.length === 0) {
+        $('#cart-has-items').hide();
+        $('#cart-empty').show();
+        return;
+    }
+
+    // Nếu có sản phẩm
+    $('#cart-empty').hide();
+    $('#cart-has-items').show();
+    tbody.empty(); // Xóa dữ liệu cũ
+
+    let subtotal = 0;
+
+    // Duyệt qua từng sản phẩm trong mảng cart
+    cart.forEach(function (item) {
+        // DÙNG HÀM TỪ data.js ĐỂ LẤY THÔNG TIN SÁCH DỰA VÀO ID
+        let book = getBookById(item.id);
+
+        // Nếu không tìm thấy sách (có thể do lỗi data), bỏ qua
+        if (!book) return;
+
+        let itemTotal = book.price * item.quantity;
+        subtotal += itemTotal;
+
+        // Render HTML cho từng dòng
+        let tr = `
+            <tr>
+                <td class="text-center">
+                    <img src="${book.image}" alt="${book.title}" class="img-fluid rounded shadow-sm" style="width: 60px; height: 85px; object-fit: cover;">
+                </td>
+                <td>
+                    <h3 class="h6 fw-bold mb-1">
+                        <a href="product-detail.html?id=${book.id}" class="text-dark text-decoration-none">${book.title}</a>
+                    </h3>
+                    <p class="small text-muted mb-0">Mã: HDTTT-${String(book.id).padStart(3, '0')}</p>
+                </td>
+                <td class="text-center" style="width: 120px;">
+                    <input type="number" class="form-control form-control-sm text-center cart-qty-update" 
+                           value="${item.quantity}" min="1" max="${book.stock}" data-id="${book.id}">
+                </td>
+                <td class="text-end text-muted">${formatPrice(book.price)}</td>
+                <td class="text-end fw-bold text-primary-custom">${formatPrice(itemTotal)}</td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-outline-danger btn-remove-item" data-id="${book.id}" title="Xóa">
+                        &times;
+                    </button>
+                </td>
+            </tr>
+        `;
+        tbody.append(tr);
+    });
+
+    // Xử lý phí vận chuyển và tổng tiền
+    let shippingFee = subtotal >= 300000 ? 0 : 30000; // Freeship cho đơn từ 300k
+    let grandTotal = subtotal + shippingFee;
+
+    // Cập nhật DOM
+    $('#subtotal').text(formatPrice(subtotal));
+    $('#shipping-fee').text(shippingFee === 0 ? "Miễn phí" : formatPrice(shippingFee));
+    $('#grand-total').text(formatPrice(grandTotal));
+}
+
+$(document).ready(function () {
+
+    // 1. Lắng nghe sự kiện THAY ĐỔI SỐ LƯỢNG
+    $(document).on('change', '.cart-qty-update', function () {
+        let bookId = $(this).data('id');
+        let newQty = parseInt($(this).val());
+        let maxStock = parseInt($(this).attr('max'));
+
+        if (newQty < 1) newQty = 1;
+        if (newQty > maxStock) {
+            alert("Số lượng vượt quá số sách còn trong kho!");
+            newQty = maxStock;
+            $(this).val(newQty);
+        }
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Tìm và cập nhật số lượng
+        let itemIndex = cart.findIndex(item => item.id === bookId);
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity = newQty;
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            renderCartPage(); // Render lại bảng
+            updateCartCount(); // Cập nhật số lượng trên navbar
+        }
+    });
+
+    // 2. Lắng nghe sự kiện XÓA 1 SẢN PHẨM
+    $(document).on('click', '.btn-remove-item', function () {
+        if (confirm("Bạn có chắc chắn muốn xóa sách này khỏi giỏ hàng?")) {
+            let bookId = $(this).data('id');
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Lọc bỏ sản phẩm có id tương ứng
+            cart = cart.filter(item => item.id !== bookId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            renderCartPage();
+            updateCartCount();
+        }
+    });
+
+    // 3. Lắng nghe sự kiện XÓA TẤT CẢ
+    $('#btn-clear-cart').on('click', function () {
+        if (confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?")) {
+            localStorage.removeItem('cart');
+            renderCartPage();
+            updateCartCount();
+        }
+    });
+});
+
+// ==========================================
+// XỬ LÝ TRANG THANH TOÁN (CHECKOUT)
+// ==========================================
+function renderCheckoutPage() {
+    // 1. Kiểm tra xem có đang ở trang checkout không (dựa vào ID #checkout-items)
+    const checkoutContainer = $('#checkout-items');
+    if (checkoutContainer.length === 0) return;
+
+    // 2. Lấy giỏ hàng từ LocalStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Nếu giỏ trống, báo lỗi và đẩy về trang sách
+    if (cart.length === 0) {
+        alert("Giỏ hàng của bạn đang trống! Vui lòng chọn sách trước khi thanh toán.");
+        window.location.href = "products.html";
+        return;
+    }
+
+    let subtotal = 0;
+    checkoutContainer.empty(); // Xóa nội dung cũ
+
+    // 3. Render danh sách sản phẩm trong đơn hàng
+    cart.forEach(function (item) {
+        // Dùng hàm từ data.js để lấy chi tiết sách
+        let book = getBookById(item.id);
+        if (!book) return;
+
+        let itemTotal = book.price * item.quantity;
+        subtotal += itemTotal;
+
+        // Tạo giao diện cho từng dòng sản phẩm
+        let html = `
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative">
+                        <img src="${book.image}" alt="${book.title}" class="rounded shadow-sm" style="width: 50px; height: 70px; object-fit: cover;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary border border-light">
+                            ${item.quantity}
+                        </span>
+                    </div>
+                    <div>
+                        <h3 class="h6 mb-0 text-dark fw-bold" style="font-size: 0.9rem;">${book.title}</h3>
+                        <small class="text-muted">HDTTT-${String(book.id).padStart(3, '0')}</small>
+                    </div>
+                </div>
+                <span class="fw-semibold" style="font-size: 0.95rem;">${formatPrice(itemTotal)}</span>
+            </div>
+        `;
+        checkoutContainer.append(html);
+    });
+
+    // 4. Hàm tính toán và hiển thị các loại phí
+    function updateCheckoutTotals() {
+        // Đọc xem người dùng chọn loại ship nào
+        let shippingMethod = $('input[name="shipping"]:checked').val();
+        let shippingFee = 0;
+
+        if (shippingMethod === 'standard') {
+            // Đơn từ 300k miễn phí ship tiêu chuẩn
+            shippingFee = subtotal >= 300000 ? 0 : 20000;
+        } else if (shippingMethod === 'fast') {
+            shippingFee = 40000; // Giao nhanh cố định 40k
+        }
+
+        let grandTotal = subtotal + shippingFee;
+
+        // Cập nhật lên HTML
+        $('#checkout-subtotal').text(formatPrice(subtotal));
+
+        if (shippingFee === 0) {
+            $('#checkout-shipping').html('<span class="text-success fw-bold">Miễn phí</span>');
+        } else {
+            $('#checkout-shipping').text(formatPrice(shippingFee));
+        }
+
+        $('#checkout-total').text(formatPrice(grandTotal));
+    }
+
+    // Gọi lần đầu để tính toán ngay khi load trang
+    updateCheckoutTotals();
+
+    // Lắng nghe sự kiện thay đổi phương thức giao hàng
+    $('input[name="shipping"]').on('change', function () {
+        updateCheckoutTotals();
+    });
+
+    // 5. Xử lý sự kiện khi nhấn nút "Đặt hàng"
+    $('#btn-place-order').on('click', function () {
+        // Kiểm tra dữ liệu nhập cơ bản
+        const fullName = $('#full-name').val().trim();
+        const phone = $('#phone').val().trim();
+        const email = $('#email').val().trim();
+        const address = $('#address').val().trim();
+        const province = $('#province').val();
+        const district = $('#district').val().trim();
+
+        // Kiểm tra nếu các ô bắt buộc bị bỏ trống
+        if (!fullName || !phone || !email || !address || !province || !district) {
+            alert("Vui lòng điền đầy đủ các thông tin nhận hàng (những ô có dấu *)!");
+            return;
+        }
+
+        // Tạo mã đơn hàng ngẫu nhiên đẹp mắt (Ví dụ: DH-849204)
+        const orderId = "DH-" + Math.floor(100000 + Math.random() * 900000);
+
+        // Lấy phương thức thanh toán
+        const paymentMethod = $('input[name="payment"]:checked').next('label').text().trim().split('\n')[0];
+
+        // Tạo đối tượng đơn hàng mới
+        const newOrder = {
+            id: orderId,
+            date: new Date().toLocaleDateString('vi-VN'),
+            customerName: fullName,
+            phone: phone,
+            address: `${address}, ${district}, ${province}`,
+            items: cart,
+            total: parseInt($('#checkout-total').text().replace(/\D/g, '')), // Lọc lấy số từ chuỗi tổng tiền
+            status: orderStatus.pending, // Trạng thái "Chờ xử lý" lấy từ data.js
+            payment: paymentMethod
+        };
+
+        // Lưu đơn hàng vào LocalStorage (vào mảng orders)
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        orders.unshift(newOrder); // Đẩy đơn hàng mới nhất lên đầu mảng
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Xóa sạch giỏ hàng vì đã thanh toán xong
+        localStorage.removeItem('cart');
+
+        // Thông báo thành công và chuyển hướng
+        alert(`🎉 Đặt hàng thành công!\nMã đơn hàng của bạn là: ${orderId}\nChúng tôi sẽ sớm liên hệ để giao hàng.`);
+        window.location.href = 'index.html'; // Hoặc chuyển sang trang orders.html nếu bạn đã làm xong
+    });
 }
