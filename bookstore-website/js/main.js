@@ -1,60 +1,101 @@
-// =====================================================
-// main.js
-// File JavaScript dùng chung cho toàn bộ website
-// HDTTT Bookstore
-// =====================================================
+/*
+Minh Huy
+*/
 
+// Hàm lắng nghe sự kiện (Dom Ready)
 $(document).ready(function () {
-    // Gắn class active cho menu tương ứng với trang hiện tại
-    setActiveNavLink();
-    renderLatestNewsIndex();
-    renderAllNewsPage();
-    // Cập nhật số lượng sản phẩm trong giỏ hàng ở navbar
-    updateCartCount();
-
-    // Xử lý các form tìm kiếm có class .search-box
-    handleSearchForm();
-
-    // Hiển thị danh sách sách nổi bật ở trang chủ
-    renderFeaturedBooks();
-
-    // Hiển thị danh sách sách ở trang products.html
-    renderProductsPage();
-
-    // Hiển thị chi tiết sách ở trang product-detail.html
-    renderProductDetail();
-
-    // Xử lý nút thêm vào giỏ hàng ở trang product-detail.html
-    handleAddToCart();
-
-    if (typeof renderCartPage === "function") renderCartPage();
-    if (typeof renderCheckoutPage === "function") renderCheckoutPage();
-    if (typeof renderOrdersPage === "function") renderOrdersPage();
-    if (typeof renderOrderDetailPage === "function") renderOrderDetailPage();
+    //Method kiểm tra trạng thái đang nhập
     checkLoginStatus();
-
+    //Method nhận diện trang đang mở trên nav
+    setActiveNavLink();
+    //Method cập nhật số lượng sách trong icon giỏ hàng trên nav
+    updateCartCount();
+    //Method tìm kiếm dùng tại index với product
+    handleSearchForm();
+    //Method hiển thị tin tức mới nhất (index với news)
+    renderLatestNewsIndex();
+    //Method hiển thi tất cả tin tức trên trang tin tức
+    renderAllNewsPage();
+    //Method hiển thị chi tiết sách (trang chủ)
+    renderFeaturedBooks();
+    //Method hiển thị cho trang sách
+    renderProductsPage();
+    //Mehtod hiện thị cho trang chi tiết sách
+    renderProductDetail();
+    //Method khi thêm sách thì sẽ +1 vào giỏ
+    handleAddToCart();
+    //Method hiển thị trang giỏ hàng 
+    renderCartPage();
+    //Method hiển thị trang thanh toán
+    renderCheckoutPage();
+    //Method hiển thị trang đơn sách
+    renderOrdersPage();
+    //Method hiển thị trang chi tiết đơn sahcs 
+    renderOrderDetailPage();
 });
 
+// =====================================================
+// Hàm kiểm tra trạng thái đăng nhập (Đã bổ sung nút Đơn hàng)
+// =====================================================
+function checkLoginStatus() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const navbarNav = $('.navbar-nav');
 
-// =====================================================
-// 1. setActiveNavLink()
-// Chức năng:
-// - Tự động xác định người dùng đang ở trang nào
-// - Thêm class "active" vào menu tương ứng trên navbar
-// - Giúp không cần sửa class active thủ công ở từng file HTML
-// =====================================================
+    if (currentUser) {
+        // Xóa nút Đăng nhập / Đăng ký cũ
+        navbarNav.find('a[href="login.html"]').parent().remove();
+        navbarNav.find('a[href="register.html"]').parent().remove();
+
+        // CHỐNG NHÂN BẢN: Kiểm tra xem nút Đăng xuất đã tồn tại chưa
+        // Chỉ thêm mới nếu chưa có id="btn-logout" trên Navbar
+        if ($('#btn-logout').length === 0) {
+            const userHtml = `
+                <li class="nav-item ms-lg-2">
+                    <a class="nav-link fw-semibold" href="orders.html" style="color: var(--accent-color);">
+                        📦 Đơn hàng
+                    </a>
+                </li>
+                
+                <li class="nav-item ms-lg-3 text-white d-flex align-items-center">
+                    <span class="me-2">Chào, <strong>${currentUser.fullName}</strong></span>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <button class="btn btn-outline-light btn-sm px-3" id="btn-logout">
+                        Đăng xuất
+                    </button>
+                </li>
+            `;
+            navbarNav.append(userHtml);
+
+            // Xử lý sự kiện đăng xuất
+            $('#btn-logout').on('click', function () {
+                if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                    localStorage.removeItem('currentUser');
+                    alert("Đã đăng xuất thành công!");
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    }
+}
+
 function setActiveNavLink() {
-    const currentPage = window.location.pathname.split("/").pop();
+    const path = window.location.pathname;
+    const currentPage = path.split("/").pop();
 
-    $(".navbar .nav-link").each(function () {
-        const linkPage = $(this).attr("href");
+    const navLinks = document.querySelectorAll(".navbar .nav-link");
+
+    // Vòng lặp for truyền thống với biến đếm i
+    for (let i = 0; i < navLinks.length; i++) {
+        const link = navLinks[i]; // Lấy phần tử tại vị trí i
+        const linkPage = link.getAttribute("href");
 
         if (linkPage === currentPage) {
-            $(this).addClass("active");
+            link.classList.add("active");
         } else {
-            $(this).removeClass("active");
+            link.classList.remove("active");
         }
-    });
+    }
 }
 
 
@@ -808,50 +849,7 @@ $(document).ready(function () {
     checkLoginStatus();
 });
 
-// =====================================================
-// Hàm kiểm tra trạng thái đăng nhập (Đã bổ sung nút Đơn hàng)
-// =====================================================
-function checkLoginStatus() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const navbarNav = $('.navbar-nav');
 
-    if (currentUser) {
-        // Xóa nút Đăng nhập / Đăng ký cũ
-        navbarNav.find('a[href="login.html"]').parent().remove();
-        navbarNav.find('a[href="register.html"]').parent().remove();
-
-        // CHỐNG NHÂN BẢN: Kiểm tra xem nút Đăng xuất đã tồn tại chưa
-        // Chỉ thêm mới nếu chưa có id="btn-logout" trên Navbar
-        if ($('#btn-logout').length === 0) {
-            const userHtml = `
-                <li class="nav-item ms-lg-2">
-                    <a class="nav-link fw-semibold" href="orders.html" style="color: var(--accent-color);">
-                        📦 Đơn hàng
-                    </a>
-                </li>
-                
-                <li class="nav-item ms-lg-3 text-white d-flex align-items-center">
-                    <span class="me-2">Chào, <strong>${currentUser.fullName}</strong></span>
-                </li>
-                <li class="nav-item ms-lg-2">
-                    <button class="btn btn-outline-light btn-sm px-3" id="btn-logout">
-                        Đăng xuất
-                    </button>
-                </li>
-            `;
-            navbarNav.append(userHtml);
-
-            // Xử lý sự kiện đăng xuất
-            $('#btn-logout').on('click', function () {
-                if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                    localStorage.removeItem('currentUser');
-                    alert("Đã đăng xuất thành công!");
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-    }
-}
 
 // ==========================================
 // XỬ LÝ TRANG GIỎ HÀNG (Dựa trên data.js)
