@@ -12,6 +12,10 @@ $(document).ready(function () {
     updateCartCount();
     //Method tìm kiếm dùng tại index với product
     handleSearchForm();
+    //Method xử lý đăng ký
+    handleRegisterForm();
+    //Method xử lý đăng nhập
+    handleLoginForm();
     //Method hiển thị tin tức mới nhất (index với news)
     renderLatestNewsIndex();
     //Method hiển thi tất cả tin tức trên trang tin tức
@@ -34,28 +38,28 @@ $(document).ready(function () {
     renderOrderDetailPage();
 });
 
-// =====================================================
-// Hàm kiểm tra trạng thái đăng nhập (Đã bổ sung nút Đơn hàng)
-// =====================================================
+//Method kiểm tra trạng thái đăng nhập để cập nhật hóa đơn
 function checkLoginStatus() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const navbarNav = $('.navbar-nav');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')); //Xem có user đang đăng nhập không, không = giữ nguyên nav
+    const navbarNav = document.querySelector('.navbar-nav');
 
-    if (currentUser) {
-        // Xóa nút Đăng nhập / Đăng ký cũ
-        navbarNav.find('a[href="login.html"]').parent().remove();
-        navbarNav.find('a[href="register.html"]').parent().remove();
+    if (currentUser && navbarNav) {
+        //Xóa nút Đăng nhập / Đăng ký cũ
+        const loginLink = navbarNav.querySelector('a[href="login.html"]');
+        if (loginLink) loginLink.parentElement.remove(); //Xóa nút đăng ký sđăng nhập
 
-        // CHỐNG NHÂN BẢN: Kiểm tra xem nút Đăng xuất đã tồn tại chưa
-        // Chỉ thêm mới nếu chưa có id="btn-logout" trên Navbar
-        if ($('#btn-logout').length === 0) {
+        const registerLink = navbarNav.querySelector('a[href="register.html"]');
+        if (registerLink) registerLink.parentElement.remove();
+
+        //Kiểm tra xem nút Đăng xuất đã tồn tại chưa
+        if (!document.getElementById('btn-logout')) {
+            //html cho nút đơn hàng
             const userHtml = `
                 <li class="nav-item ms-lg-2">
                     <a class="nav-link fw-semibold" href="orders.html" style="color: var(--accent-color);">
                         📦 Đơn hàng
                     </a>
                 </li>
-                
                 <li class="nav-item ms-lg-3 text-white d-flex align-items-center">
                     <span class="me-2">Chào, <strong>${currentUser.fullName}</strong></span>
                 </li>
@@ -65,10 +69,12 @@ function checkLoginStatus() {
                     </button>
                 </li>
             `;
-            navbarNav.append(userHtml);
 
-            // Xử lý sự kiện đăng xuất
-            $('#btn-logout').on('click', function () {
+            //chèn đoạn html trên vào cuối nav
+            navbarNav.insertAdjacentHTML('beforeend', userHtml);
+
+            //xử lý cho đăng xuất
+            document.getElementById('btn-logout').addEventListener('click', function () {
                 if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
                     localStorage.removeItem('currentUser');
                     alert("Đã đăng xuất thành công!");
@@ -79,104 +85,165 @@ function checkLoginStatus() {
     }
 }
 
+// Method dùng để hiển thị trang hiện đang ở trên nav
 function setActiveNavLink() {
-    const path = window.location.pathname;
-    const currentPage = path.split("/").pop();
+    const path = window.location.pathname; //Lấy url
+    const currentPage = path.split("/").pop(); //Tách để lấy tên file
 
-    const navLinks = document.querySelectorAll(".navbar .nav-link");
+    const navLinks = document.querySelectorAll(".navbar .nav-link"); //Gom thẻ a vào Nodelist
 
     // Vòng lặp for truyền thống với biến đếm i
     for (let i = 0; i < navLinks.length; i++) {
         const link = navLinks[i]; // Lấy phần tử tại vị trí i
-        const linkPage = link.getAttribute("href");
+        const linkPage = link.getAttribute("href"); // Xem coi đang dẫn đến vị trí nào
 
         if (linkPage === currentPage) {
-            link.classList.add("active");
+            link.classList.add("active"); //Tô đậm
         } else {
-            link.classList.remove("active");
+            link.classList.remove("active"); //Bỏ tô đậm nếu không còn ở trang đó
         }
     }
 }
 
-
-// =====================================================
-// 2. updateCartCount()
-// Chức năng:
-// - Đọc dữ liệu giỏ hàng từ LocalStorage
-// - Tính tổng số lượng sản phẩm trong giỏ
-// - Hiển thị số lượng đó lên badge "Giỏ hàng" trên navbar
-//
-// LocalStorage key sử dụng: "cart"
-// Dữ liệu mẫu:
-// [
-//   { id: 1, quantity: 2 },
-//   { id: 13, quantity: 1 }
-// ]
-// =====================================================
+//Method cập nhật số lượng sách cho icon giỏ hàng trên nav
 function updateCartCount() {
+    //lấy dữ liệu từ LocalStorage, nếu không có thì mặc định là mảng rỗng
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     let totalQuantity = 0;
 
-    cart.forEach(function (item) {
-        totalQuantity += item.quantity || 1;
-    });
-
-    $("#cart-count").text(totalQuantity);
-}
-
-
-// =====================================================
-// 3. handleSearchForm()
-// Chức năng:
-// - Xử lý các form tìm kiếm có class .search-box
-// - Dùng được cho cả index.html và products.html
-// - Nếu người dùng nhập từ khóa thì chuyển sang:
-//   products.html?keyword=tu-khoa
-// - Nếu ô tìm kiếm trống thì chuyển sang products.html
-// =====================================================
-function handleSearchForm() {
-    $(".search-box").on("submit", function (event) {
-        event.preventDefault();
-
-        const keyword = $(this).find("input[name='keyword']").val().trim();
-
-        if (keyword === "") {
-            window.location.href = "products.html";
-        } else {
-            window.location.href = "products.html?keyword=" + encodeURIComponent(keyword);
-        }
-    });
-}
-
-
-// =====================================================
-// 4. renderFeaturedBooks()
-// Chức năng:
-// - Lấy danh sách sách nổi bật từ data.js
-// - Chỉ hiển thị 4 sách đầu tiên
-// - Tự động tạo card sách và đưa vào index.html
-//
-// Điều kiện:
-// - Trong index.html phải có thẻ:
-//   <div class="row g-4" id="featured-books"></div>
-// =====================================================
-function renderFeaturedBooks() {
-    const container = $("#featured-books");
-
-    // Nếu trang hiện tại không có khu vực sách nổi bật thì không chạy
-    if (container.length === 0) {
-        return;
+    //đi qua từng món hàng (item) có trong giỏ (cart)
+    for (const item of cart) {
+        //lấy số lượng của món đó cộng dồn vào "giỏ đựng"
+        //nếu không có số lượng (undefined), lấy mặc định là 1
+        totalQuantity += (item.quantity || 1);
     }
 
+    //kết quả cuối cùng nằm ở biến totalQuantity
+    //cập nhật lên giao diện
+    const cartCountElement = document.getElementById("cart-count");
+    if (cartCountElement) {
+        cartCountElement.textContent = totalQuantity;
+    }
+}
+
+//Method cho tìm kiếm
+function handleSearchForm() {
+    const searchForm = document.querySelector(".search-box");
+
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (event) {
+            //chặn trình duyệt load lại trang theo cách mặc định của form
+            event.preventDefault();
+
+            //tìm ô input bên trong form và lấy giá trị
+            const inputKeyword = this.querySelector("input[name='keyword']");
+            const keyword = inputKeyword ? inputKeyword.value.trim() : "";
+
+            //Điều hướng trang
+            if (keyword === "") {
+                window.location.href = "products.html";
+            } else {
+                //mã hóa các ký tự đặc biệt (tiếng Việt, dấu cách)
+                window.location.href = "products.html?keyword=" + encodeURIComponent(keyword);
+            }
+        });
+    }
+}
+
+//method hiển thị tin tức ở index
+function renderLatestNewsIndex() {
+    //chọn vùng chứa (ID duy nhất -> Dùng JS thuần là nhanh nhất)
+    const newsContainer = document.getElementById('latest-news-container');
+
+    //kiểm tra an toàn: Nếu không có khung chứa hoặc chưa có mảng newsList thì thoát
+    if (!newsContainer || typeof newsList === 'undefined') return;
+
+    //xử lý dữ liệu (JS thuần)
+    const latestNews = newsList.slice(0, 3);
+    let html = '';
+
+    latestNews.forEach(news => {
+        html += `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden news-card">
+                    <img src="${news.image}" 
+                         class="card-img-top" 
+                         alt="${news.title}" 
+                         style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <small class="text-muted">${news.date}</small>
+                        <h5 class="card-title fw-bold mt-2">${news.title}</h5>
+                        <p class="card-text text-muted small">${news.summary.substring(0, 100)}...</p>
+                        <a href="news.html" class="btn btn-outline-primary-custom btn-sm">Đọc tiếp</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    // 4. Đổ dữ liệu vào giao diện (JS thuần)
+    newsContainer.innerHTML = html;
+}
+
+//Hàm hiển thị danh sách toàn bộ tin tức tại trang news.html
+function renderAllNewsPage() {
+    //xác định vùng chứa danh sách tin tức
+    //sử dụng getElementById vì đây là ID duy nhất, giúp trình duyệt tìm kiếm nhanh nhất (JS thuần)
+    const container = document.getElementById('news-list');
+
+    //nếu không tìm thấy vùng chứa hàm sẽ dừng ngay lập tức
+    if (!container) return;
+
+    //hởi tạo biến tích lũy mã HTML
+    let html = "";
+
+    //duyệt qua mảng dữ liệu tin tức (newsList lấy từ file data.js)
+    newsList.forEach(news => {
+        //sử dụng Template Literal (dấu `) để lắp ráp các mảnh dữ liệu vào bộ khung HTML
+        html += `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm news-card">
+                    <img src="${news.image}" class="card-img-top" alt="${news.title}" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">${news.title}</h5>
+                        <p class="text-muted small">${news.summary}</p>
+                        
+                        <button class="btn btn-primary btn-sm" onclick="showNewsDetail(${news.id})">
+                            Xem chi tiết
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    //cập nhật giao diện
+    //đổ toàn bộ chuỗi HTML đã tích lũy vào vùng chứa chỉ trong một lần duy nhất (Tối ưu hiệu suất DOM)
+    container.innerHTML = html;
+}
+
+//Method hiển thị sách nổi bật trên trang chủ
+function renderFeaturedBooks() {
+    //chọn vùng chứa của tính năng
+    const container = document.getElementById("featured-books");
+
+    // Nếu trang này không có id="featured-books" (ví dụ trang Liên hệ) thì thoát hàm
+    if (!container) {
+        return;
+    }
+    //lấy dữ liệu và cắt lấy 4 cuốn đầu tiên
     const featuredBooks = getFeaturedBooks().slice(0, 4);
     let html = "";
 
+    //duyệt mảng và tạo chuỗi HTML
     featuredBooks.forEach(function (book) {
         const category = getCategoryById(book.categoryId);
         const categoryName = category ? category.name : "Sách";
 
         html += `
-            <div class="col-sm-6 col-lg-3">
+            <div class="col-sm-6 col-lg-3 mb-4">
                 <article class="card book-card h-100">
                     <img src="${book.image}" 
                          class="card-img-top" 
@@ -187,7 +254,7 @@ function renderFeaturedBooks() {
                             ${categoryName}
                         </span>
 
-                        <h3 class="card-title h6">${book.title}</h3>
+                        <h3 class="card-title h6 text-truncate">${book.title}</h3>
 
                         <p class="card-text text-muted small flex-grow-1">
                             ${book.description}
@@ -207,85 +274,57 @@ function renderFeaturedBooks() {
         `;
     });
 
-    container.html(html);
+    //đổ toàn bộ chuỗi HTML vào vùng chứa
+    container.innerHTML = html;
 }
 
-
-// =====================================================
-// 5. getUrlParam(paramName)
-// Chức năng:
-// - Lấy giá trị tham số trên URL
-// - Dùng cho products.html, product-detail.html,
-//   news-detail.html, order-detail.html
-//
-// Ví dụ:
-// URL: product-detail.html?id=5
-// getUrlParam("id") sẽ trả về "5"
-// =====================================================
+//method lấy dữ liệu động từ url
 function getUrlParam(paramName) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(paramName);
 }
 
-
-// =====================================================
-// PHẦN PRODUCTS.HTML VÀ PRODUCT-DETAIL.HTML
-// Chức năng:
-// - Render danh sách sản phẩm từ data.js
-// - Lọc sách theo từ khóa, thể loại, giá
-// - Sắp xếp sách
-// - Phân trang
-// - Render chi tiết 1 quyển sách theo id trên URL
-// - Thêm sách vào giỏ hàng bằng LocalStorage
-// =====================================================
-
-
-// Số lượng sách hiển thị trên mỗi trang products.html
+//Số lượng tối đa sách hiển thị mỗi trang
 const PRODUCTS_PER_PAGE = 9;
 
-
-// =====================================================
-// 6. renderProductsPage()
-// Chức năng:
-// - Kiểm tra xem trang hiện tại có phải products.html không
-// - Đọc các tham số trên URL như keyword, category, price, sort, page
-// - Lọc sách theo từ khóa, thể loại, khoảng giá
-// - Sắp xếp sách nếu người dùng chọn
-// - Cắt danh sách sách theo trang hiện tại
-// - Gọi renderBookList() để hiển thị sách
-// - Gọi renderProductPagination() để hiển thị phân trang
-// =====================================================
+//Hiển thị xử lý việc hiển thị danh sách sản phẩm
 function renderProductsPage() {
+    //Kiểm tra sự tồn tại của vùng chứa danh sách sản phẩm
     const productList = $("#product-list");
 
-    // Nếu không có id product-list nghĩa là không phải trang products.html
+    //không thấy id, trả về null
     if (productList.length === 0) {
         return;
     }
 
-    const keyword = getUrlParam("keyword") || "";
-    const category = getUrlParam("category") || "";
-    const price = getUrlParam("price") || "";
-    const sort = getUrlParam("sort") || "default";
-    const page = Number(getUrlParam("page")) || 1;
+    //Thu thập các tham số lọc từ URL (getUrlParam)
+    const keyword = getUrlParam("keyword") || ""; //từ khóa
+    const category = getUrlParam("category") || ""; //thể loại (id)
+    const price = getUrlParam("price") || ""; //giá
+    const sort = getUrlParam("sort") || "default"; //sắp xếp
+    const page = Number(getUrlParam("page")) || 1; //trang hiện tại
 
+    //đổ dữ liệu lên input / select
     $("#filterKeyword").val(keyword);
     $("#filterCategory").val(category);
     $("#filterPrice").val(price);
     $("#sortProduct").val(sort);
 
     let filteredBooks = books.filter(function (book) {
+        //lọc theo tiêu đề, tác giả, mô tả
         const matchKeyword =
             keyword === "" ||
             book.title.toLowerCase().includes(keyword.toLowerCase()) ||
             book.author.toLowerCase().includes(keyword.toLowerCase()) ||
             book.description.toLowerCase().includes(keyword.toLowerCase());
 
+        //lọc theo thể loại
         const matchCategory =
             category === "" || book.categoryId === category;
 
         let matchPrice = true;
 
+        //lọc theo khoản giá
         if (price === "duoi-100") {
             matchPrice = book.price < 100000;
         } else if (price === "100-150") {
@@ -294,50 +333,54 @@ function renderProductsPage() {
             matchPrice = book.price > 150000;
         }
 
+        //trả về sách thỏa điều kiện
         return matchKeyword && matchCategory && matchPrice;
     });
 
+    //sắp xếp
+    //tăng
     if (sort === "price-asc") {
         filteredBooks.sort(function (a, b) {
             return a.price - b.price;
         });
-    } else if (sort === "price-desc") {
+    }
+    //giảm
+    else if (sort === "price-desc") {
         filteredBooks.sort(function (a, b) {
             return b.price - a.price;
         });
-    } else if (sort === "name-asc") {
+    }// a-z theo tiến gvieetj
+    else if (sort === "name-asc") {
         filteredBooks.sort(function (a, b) {
             return a.title.localeCompare(b.title, "vi");
         });
     }
 
+    //tính tổng theo theo số sách lọc được
     const totalPages = Math.ceil(filteredBooks.length / PRODUCTS_PER_PAGE);
+    //trang phải hợp leek, tức min 1
     const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+    //var này lấy index để cắt mảng
     const startIndex = (validPage - 1) * PRODUCTS_PER_PAGE;
-
+    //cắt sao cho max 9 sách 1 trang
     const booksOnPage = filteredBooks.slice(
         startIndex,
         startIndex + PRODUCTS_PER_PAGE
     );
 
+    //hiển thị lên web
     renderBookList(booksOnPage);
     renderProductPagination(totalPages, validPage);
     handleProductFilterForm();
     handleProductSort();
 }
 
-
-// =====================================================
-// 7. renderBookList(bookArray)
-// Chức năng:
-// - Nhận vào một mảng sách
-// - Tạo HTML card cho từng quyển sách
-// - Đưa toàn bộ card vào #product-list
-// - Nếu không có sách phù hợp thì hiện thông báo
-// =====================================================
+//hiển thị danh sách sách đã được lọc và phân trang
 function renderBookList(bookArray) {
+    //vùng chứa danh sách sách trên web
     const productList = $("#product-list");
 
+    //Xử lý trường hợp không tìm thấy kết quả (Mảng rỗng)
     if (bookArray.length === 0) {
         productList.html(`
             <div class="col-12">
@@ -352,12 +395,15 @@ function renderBookList(bookArray) {
         return;
     }
 
+    //Khởi tạo biến tích lũy chuỗi HTML
     let html = "";
 
+    //Duyệt qua từng cuốn sách trong mảng truyền vào
     bookArray.forEach(function (book) {
+        //Lấy tên thể loại dựa trên ID (gọi hàm từ data.js)
         const category = getCategoryById(book.categoryId);
         const categoryName = category ? category.name : "Sách";
-
+        //Lắp ráp Template Literal (dấu `) để tạo khung Card cho từng cuốn sách
         html += `
             <div class="col-sm-6 col-xl-4">
                 <article class="card book-card h-100">
@@ -395,26 +441,21 @@ function renderBookList(bookArray) {
             </div>
         `;
     });
-
+    //Đổ toàn bộ chuỗi HTML đã xây dựng vào vùng chứa (Cập nhật giao diện một lần duy nhất)
     productList.html(html);
 }
 
-
-// =====================================================
-// 8. renderProductPagination(totalPages, currentPage)
-// Chức năng:
-// - Nhận tổng số trang và trang hiện tại
-// - Tạo nút Trước, Sau và các nút số trang
-// - Trang hiện tại sẽ được thêm class active
-// - Nếu chỉ có 1 trang thì không hiện phân trang
-// =====================================================
+//hiển thị phân trang (số lượng trang ở trang product)
 function renderProductPagination(totalPages, currentPage) {
+    //Xác định vùng chứa thanh phân trang trên giao diện
     const pagination = $("#product-pagination");
 
+    //Nếu không tìm thấy vùng chứa trên trang hiện tại thì thoát
     if (pagination.length === 0) {
         return;
     }
 
+    //Nếu tổng số trang chỉ có 1 (hoặc 0), thì ẩn thanh phân trang đi
     if (totalPages <= 1) {
         pagination.html("");
         return;
@@ -422,6 +463,7 @@ function renderProductPagination(totalPages, currentPage) {
 
     let html = "";
 
+    //Tạo nút "TRƯỚC" (Previous)
     html += `
         <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
             <a class="page-link" href="${buildProductUrl(currentPage - 1)}">
@@ -430,7 +472,9 @@ function renderProductPagination(totalPages, currentPage) {
         </li>
     `;
 
+    //Vòng lặp tạo các nút số trang (1, 2, 3...)
     for (let i = 1; i <= totalPages; i++) {
+        //Nút trang hiện tại sẽ có class 'active' để tô đậm màu xanh
         html += `
             <li class="page-item ${i === currentPage ? "active" : ""}">
                 <a class="page-link" href="${buildProductUrl(i)}">
@@ -440,6 +484,8 @@ function renderProductPagination(totalPages, currentPage) {
         `;
     }
 
+    //Tạo nút "SAU" (Next)
+    //Template Literals
     html += `
         <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
             <a class="page-link" href="${buildProductUrl(currentPage + 1)}">
@@ -448,47 +494,38 @@ function renderProductPagination(totalPages, currentPage) {
         </li>
     `;
 
+    //Cập nhật toàn bộ thanh phân trang vào HTML
     pagination.html(html);
 }
 
-
-// =====================================================
-// 9. buildProductUrl(page)
-// Chức năng:
-// - Tạo lại URL cho products.html khi người dùng bấm phân trang
-// - Giữ nguyên các tham số lọc hiện tại như keyword, category, price, sort
-// - Chỉ thay đổi tham số page
-//
-// Ví dụ:
-// products.html?category=cong-nghe&page=2
-// =====================================================
+//method dựng đường dẫn URL mới cho trang sản phẩm khi chuyển trang (Phân trang)
 function buildProductUrl(page) {
+    /*
+    Khởi tạo đối tượng URLSearchParams từ URL hiện tại của trình duyệt
+    window.location.search lấy phần đuôi từ dấu "?" trở đi (?keyword=abc&category=1)
+    */
     const params = new URLSearchParams(window.location.search);
 
+    //Cập nhật hoặc thêm mới tham số "page" vào danh sách tham số
     params.set("page", page);
 
+    //biến đối tượng thành chuỗi "keyword=abc&category=1&page=2"
     return "products.html?" + params.toString();
 }
 
-
-// =====================================================
-// 10. handleProductFilterForm()
-// Chức năng:
-// - Xử lý khi người dùng bấm nút "Lọc sách"
-// - Lấy dữ liệu từ form lọc
-// - Tạo URL mới dựa theo keyword, category, price
-// - Chuyển trang đến URL đó để render lại danh sách sách
-// =====================================================
+//method xử lý sự kiện khi người dùng nhấn nút "Lọc" hoặc "Tìm kiếm" trong form bộ lọc.
 function handleProductFilterForm() {
+    //Lắng nghe sự kiện Submit (gửi biểu mẫu) của form bộ lọc
     $("#product-filter-form").on("submit", function (event) {
+        //Chặn hành động load lại trang mặc định của trình duyệt
         event.preventDefault();
-
+        //Lấy giá trị từ các ô Input và Select
         const keyword = $("#filterKeyword").val().trim();
         const category = $("#filterCategory").val();
         const price = $("#filterPrice").val();
-
+        //Khởi tạo đối tượng quản lý tham số URL vd "?keyword=abc&price=..."
         const params = new URLSearchParams();
-
+        //Kiểm tra và đóng gói dữ liệu vào danh sách tham số
         if (keyword !== "") {
             params.set("keyword", keyword);
         }
@@ -500,57 +537,47 @@ function handleProductFilterForm() {
         if (price !== "") {
             params.set("price", price);
         }
-
+        //Luôn đặt lại số trang về 1 mỗi khi thực hiện bộ lọc mới
         params.set("page", 1);
-
+        //Thực hiện điều hướng trình duyệt sang trang danh sách sản phẩm
+        //vd products.html?keyword=...&category=...&page=1
         window.location.href = "products.html?" + params.toString();
     });
 }
 
-
-// =====================================================
-// 11. handleProductSort()
-// Chức năng:
-// - Xử lý khi người dùng chọn sắp xếp
-// - Cập nhật tham số sort trên URL
-// - Chuyển lại về page 1 sau khi đổi kiểu sắp xếp
-// =====================================================
+//method xử lý sự kiện khi người dùng thay đổi lựa chọn trong ô "Sắp xếp theo"
 function handleProductSort() {
+    //Lắng nghe sự kiện của thẻ select có id="sortProduct"
     $("#sortProduct").on("change", function () {
+        //Khởi tạo đối tượng URLSearchParams từ URL hiện tại của trình duyệt
         const params = new URLSearchParams(window.location.search);
+        //Lấy giá trị sắp xếp mà người dùng vừa chọn
         const sort = $(this).val();
-
+        //Logic cập nhật tham số "sort"
         if (sort === "default") {
+            //chọn "Mặc định", xóa bỏ tham số sort khỏi URL
             params.delete("sort");
         } else {
             params.set("sort", sort);
         }
 
         params.set("page", 1);
-
+        //Thực hiện điều hướng trình duyệt sang URL mới đã được cập nhật tham số
         window.location.href = "products.html?" + params.toString();
     });
 }
 
-
-// =====================================================
-// 12. renderProductDetail()
-// Chức năng:
-// - Kiểm tra xem trang hiện tại có phải product-detail.html không
-// - Lấy id sách từ URL
-// - Tìm sách trong mảng books bằng getBookById()
-// - Nếu có sách thì đổ dữ liệu lên giao diện chi tiết
-// - Nếu không có sách thì hiển thị thông báo lỗi
-// - Gọi renderRelatedBooks() để hiển thị sách liên quan
-// =====================================================
+//method hiển thị thông tin chi tiết của một cuốn sách
 function renderProductDetail() {
     if ($("#detail-book-title").length === 0) {
         return;
     }
-
+    // /Lấy ID sách từ tham số "id" trên URL, nếu không có mặc định lấy sách số 1
     const id = getUrlParam("id") || 1;
+    //Tìm đối tượng sách tương ứng trong mảng books data.js
     const book = getBookById(id);
 
+    //Xử lý trường hợp không tìm thấy sách (ID sai hoặc sách đã bị xóa)
     if (!book) {
         $("main").html(`
             <section class="py-5">
@@ -573,63 +600,59 @@ function renderProductDetail() {
     const category = getCategoryById(book.categoryId);
     const categoryName = category ? category.name : "Sách";
     const discount = Math.round((1 - book.price / book.oldPrice) * 100);
-
+    //Cập nhật ảnh sản phẩm và thuộc tính alt
     $("#detail-book-image").attr("src", book.image);
     $("#detail-book-image").attr("alt", "Sách " + book.title);
-
+    //Cập nhật các thông tin văn bản cơ bản
     $("#detail-book-category").text(categoryName);
     $("#detail-book-title").text(book.title);
     $("#detail-book-author").text(book.author);
     $("#detail-book-rating").text("★★★★★ " + book.rating);
+    //Tạo mã sách tự động (Ví dụ: HDTTT-000)
     $("#detail-book-code").text("HDTTT-" + String(book.id).padStart(3, "0"));
-
+    //Hiển thị trạng thái kho hàng và giá tiền
     $("#detail-book-stock").text(book.stock > 0 ? "Còn hàng" : "Hết hàng");
     $("#detail-book-price").text(formatPrice(book.price));
     $("#detail-book-old-price").text(formatPrice(book.oldPrice));
-
+    //Đổ nội dung mô tả
     $("#detail-book-description").text(book.description);
     $("#detail-book-long-description").text(book.longDescription || book.description);
     $("#detail-book-publisher").text(book.publisher);
     $("#detail-book-year").text(book.year);
     $("#detail-book-pages").text(book.pages + " trang");
     $("#detail-book-quantity-stock").text(book.stock + " quyển");
-
+    //Thiết lập các ràng buộc cho người dùng
+    //Giới hạn số lượng mua tối đa không vượt quá số lượng tồn kho
     $("#quantity").attr("max", book.stock);
+    // Hiển thị nhãn giảm giá
     $("#detail-discount").text("Tiết kiệm " + discount + "%");
 
     renderRelatedBooks(book);
 }
 
-
-// =====================================================
-// 13. renderRelatedBooks(currentBook)
-// Chức năng:
-// - Nhận vào sách hiện tại
-// - Lọc ra các sách cùng thể loại
-// - Loại bỏ chính sách đang xem
-// - Lấy tối đa 4 sách liên quan
-// - Render thành card và đưa vào #related-books
-// =====================================================
+//thị danh sách các sản phẩm liên quan (Cùng thể loại)
 function renderRelatedBooks(currentBook) {
     const container = $("#related-books");
 
     if (container.length === 0) {
         return;
     }
-
+    //lọc dữ liệu
     const relatedBooks = books
         .filter(function (book) {
+            //Lọc ra các cuốn sách có cùng ID thể loại (categoryId) phải khác ID với cuốn đang xem
             return book.categoryId === currentBook.categoryId &&
                 book.id !== currentBook.id;
         })
-        .slice(0, 4);
+        .slice(0, 4);//Chỉ lấy tối đa 4 cuốn sách để đảm bảo giao diện cân đối
 
     let html = "";
 
+    //Duyệt qua mảng sách liên quan đã lọc được
     relatedBooks.forEach(function (book) {
         const category = getCategoryById(book.categoryId);
         const categoryName = category ? category.name : "Sách";
-
+        //Lắp ráp Template Literal để tạo khung Card cho từng cuốn sách gợi ý
         html += `
             <div class="col-sm-6 col-lg-3">
                 <article class="card book-card h-100">
@@ -667,20 +690,11 @@ function renderRelatedBooks(currentBook) {
     container.html(html);
 }
 
-
-// =====================================================
-// 14. handleAddToCart()
-// Chức năng:
-// - Gắn sự kiện click cho nút "Thêm vào giỏ hàng"
-// - Lấy id sách từ URL
-// - Lấy số lượng người dùng nhập
-// - Kiểm tra sách có tồn tại không
-// - Kiểm tra số lượng hợp lệ không
-// - Gọi addToCart() để lưu sách vào LocalStorage
-// - Cập nhật lại số lượng giỏ hàng trên navbar
-// =====================================================
+//method xử lý sự kiện khi người dùng nhấn nút "Thêm vào giỏ hàng"
 function handleAddToCart() {
+    //Lắng nghe sự kiện click trên nút "Thêm vào giỏ hàng"
     $("#btn-add-cart").on("click", function () {
+        //Xác định cuốn sách hiện tại dựa trên ID lấy từ thanh địa chỉ URL
         const id = Number(getUrlParam("id") || 1);
         const book = getBookById(id);
 
@@ -688,51 +702,40 @@ function handleAddToCart() {
             alert("Không tìm thấy sách để thêm vào giỏ hàng.");
             return;
         }
-
+        //Lấy số lượng từ ô nhập liệu và chuyển sang kiểu số (Number)
         const quantity = Number($("#quantity").val());
-
+        //Số lượng mua phải tối thiểu là 1
         if (quantity < 1) {
             alert("Số lượng phải lớn hơn 0.");
             return;
         }
-
+        //Kiểm tra tồn kho
         if (quantity > book.stock) {
             alert("Số lượng vượt quá số sách còn trong kho.");
             return;
         }
 
         addToCart(book.id, quantity);
+        //làm mới con số trên icon giỏ hàng tại Navbar
         updateCartCount();
 
         alert("Đã thêm sách vào giỏ hàng!");
     });
 }
 
-
-// =====================================================
-// 15. addToCart(bookId, quantity)
-// Chức năng:
-// - Đọc giỏ hàng từ LocalStorage
-// - Nếu sách đã có trong giỏ thì tăng số lượng
-// - Nếu sách chưa có thì thêm sách mới vào giỏ
-// - Lưu lại giỏ hàng vào LocalStorage
-//
-// Dữ liệu lưu trong LocalStorage có dạng:
-// [
-//   { id: 1, quantity: 2 },
-//   { id: 13, quantity: 1 }
-// ]
-// =====================================================
+//thêm sản phẩm vào giỏ hàng và lưu trữ vào LocalStorage
 function addToCart(bookId, quantity) {
+    // Lấy chuỗi giỏ hàng từ LocalStorage và giải mã JSON thành mảng.
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
+    //lấy chuỗi giỏ hàng từ LocalStorage và giải mã JSON thành mảng.
     const existingItem = cart.find(function (item) {
         return item.id === bookId;
     });
 
     if (existingItem) {
+        //Sách đã có trong giỏ -> Chỉ cần cập nhật thêm số lượng mới vào số lượng cũ.
         existingItem.quantity += quantity;
-    } else {
+    } else { //Sách mới chưa có trong giỏ -> Thêm một đối tượng mới vào mảng.
         cart.push({
             id: bookId,
             quantity: quantity
@@ -742,119 +745,143 @@ function addToCart(bookId, quantity) {
     localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// Thêm đoạn này vào main.js hoặc script tag trong register.html
-$(document).ready(function () {
-    // Xử lý sự kiện submit form Đăng ký
-    $('form[action="login.html"]').on('submit', function (e) {
-        e.preventDefault(); // Ngăn load lại trang
+//method xử lý logic Đăng ký thành viên
+function handleRegisterForm() {
+    //Tìm form đăng ký (Ưu tiên ID, sau đó là thuộc tính action)
+    const registerForm = $('#register-form').length > 0 ? $('#register-form') : $('form[action="login.html"]');
 
-        // 1. Lấy dữ liệu từ các ô input
+    if (registerForm.length === 0) return;
+
+    registerForm.on('submit', function (e) {
+        e.preventDefault();
+
+        //lấy dữ liệu
         const fullName = $('#registerName').val().trim();
         const email = $('#registerEmail').val().trim();
         const password = $('#registerPassword').val();
         const confirmPassword = $('#registerConfirmPassword').val();
         const termsAccepted = $('#termsCheck').is(':checked');
 
-        // 2. Kiểm tra dữ liệu (Validation)
-        if (password !== confirmPassword) {
-            alert("Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại!");
+        // Regex Họ tên: [Chữ cái Hoa][Chữ cái thường]* ... cách nhau đúng 1 khoảng trắng
+        // \p{Lu}: Chữ hoa Unicode | \p{Ll}: Chữ thường Unicode |'u':Unicode
+        const nameRegex = /^[\p{Lu}][\p{Ll}]*(\s[\p{Lu}][\p{Ll}]*)*$/u;
+
+        // Regex Email: Bắt đầu bằng chữ cái [a-zA-Z], không cho phép số đứng đầu
+        const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        // Kiểm tra Tên
+        if (!nameRegex.test(fullName)) {
+            alert("Họ tên không hợp lệ! Vui lòng viết hoa chữ cái đầu mỗi từ và không dùng ký tự lạ.");
             return;
         }
 
+        // Kiểm tra Email
+        if (!emailRegex.test(email)) {
+            alert("Email không hợp lệ! Email phải bắt đầu bằng chữ cái (vd: huy@gmail.com).");
+            return;
+        }
+
+        // Kiểm tra Mật khẩu
+        if (password.length < 6) {
+            alert("Mật khẩu phải từ 6 ký tự trở lên!");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Mật khẩu xác nhận không khớp!");
+            return;
+        }
+
+        // Kiểm tra Điều khoản
         if (!termsAccepted) {
             alert("Bạn phải đồng ý với điều khoản dịch vụ để đăng ký.");
             return;
         }
 
-        // 3. Kiểm tra trùng lặp Email
-        // Lấy danh sách user từ data.js và từ LocalStorage (nếu có)
+        // --- KIỂM TRA TRÙNG LẶP & LƯU DỮ LIỆU ---
         const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
-        const allUsers = [...users, ...localUsers]; // Gộp cả user mẫu và user mới đăng ký
+        const allUsers = [...users, ...localUsers]; // users lấy từ file data.js
 
-        const isExisted = allUsers.some(user => user.email === email);
-        if (isExisted) {
+        if (allUsers.some(user => user.email === email)) {
             alert("Email này đã được sử dụng. Vui lòng chọn email khác!");
             return;
         }
 
-        // 4. Tạo đối tượng người dùng mới
+        // Tạo user mới và lưu vào LocalStorage
         const newUser = {
-            id: Date.now(), // Tạo ID duy nhất bằng timestamp
+            id: Date.now(),
             fullName: fullName,
             email: email,
             password: password,
             role: "user"
         };
 
-        // 5. Lưu vào LocalStorage
         localUsers.push(newUser);
         localStorage.setItem('localUsers', JSON.stringify(localUsers));
 
-        // 6. Thông báo và chuyển hướng
-        alert("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
+        alert("Đăng ký thành công! Hệ thống sẽ chuyển bạn sang trang đăng nhập.");
         window.location.href = 'login.html';
     });
-});
+}
 
-// Thêm đoạn này vào main.js hoặc script tag trong login.html
-$(document).ready(function () {
-    // Xử lý sự kiện submit form Đăng nhập
-    $('form[action="index.html"]').on('submit', function (e) {
-        e.preventDefault(); // Ngăn load lại trang
 
+//method xử lý logic Đăng nhập người dùng 
+function handleLoginForm() {
+    const loginForm = $('form[action="index.html"]');
+
+    //Nếu trang hiện tại không có form đăng nhập thì thoát hàm
+    if (loginForm.length === 0) return;
+
+
+    //Khi trang load, kiểm tra xem có email nào được lưu ở LocalStorage không
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+        $('#loginEmail').val(savedEmail);
+        $('#rememberMe').prop('checked', true);
+    }
+
+    //Lắng nghe sự kiện Submit form
+    loginForm.on('submit', function (e) {
+        e.preventDefault(); // Chặn trình duyệt load lại trang
+
+        //lasya dữ liệu từ giao diện
         const email = $('#loginEmail').val().trim();
         const password = $('#loginPassword').val();
         const rememberMe = $('#rememberMe').is(':checked');
 
-        // 1. Lấy tất cả người dùng (từ file data.js và từ bộ nhớ LocalStorage)
+        // Lấy danh sách từ LocalStorage (người dùng tự đăng ký)
         const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+        // Gộp với danh sách users mẫu (từ file data.js)
         const allUsers = [...users, ...localUsers];
 
-        // 2. Tìm kiếm người dùng khớp thông tin
+        // Tìm người dùng có Email và Mật khẩu khớp hoàn toàn
         const userFound = allUsers.find(u => u.email === email && u.password === password);
 
         if (userFound) {
-            // 3. Đăng nhập thành công
-            // Lưu trạng thái đăng nhập vào LocalStorage
+            //Lưu thông tin người dùng hiện tại để các trang khác có thể sử dụng
             localStorage.setItem('currentUser', JSON.stringify({
                 fullName: userFound.fullName,
                 email: userFound.email,
                 role: userFound.role
             }));
 
+            //Xử lý logic "Ghi nhớ tài khoản"
             if (rememberMe) {
                 localStorage.setItem('rememberedEmail', email);
             } else {
                 localStorage.removeItem('rememberedEmail');
             }
 
+            //Thông báo và điều hướng về trang chủ
             alert("Chào mừng " + userFound.fullName + " quay trở lại!");
             window.location.href = 'index.html';
         } else {
-            // 4. Sai thông tin
             alert("Email hoặc mật khẩu không chính xác. Vui lòng thử lại!");
         }
     });
+}
 
-    // Tự động điền email nếu người dùng đã chọn "Ghi nhớ tài khoản" trước đó
-    const savedEmail = localStorage.getItem('rememberedEmail');
-    if (savedEmail) {
-        $('#loginEmail').val(savedEmail);
-        $('#rememberMe').prop('checked', true);
-    }
-});
-
-$(document).ready(function () {
-    // Các hàm cũ của bạn...
-    checkLoginStatus();
-});
-
-
-
-// ==========================================
-// XỬ LÝ TRANG GIỎ HÀNG (Dựa trên data.js)
-// ==========================================
-
+//method xử lý giỏ hnagf
 function renderCartPage() {
     // Chỉ chạy logic này nếu đang ở trang cart.html
     const tbody = $('#cart-items-body');
@@ -928,7 +955,7 @@ function renderCartPage() {
 
 $(document).ready(function () {
 
-    // 1. Lắng nghe sự kiện THAY ĐỔI SỐ LƯỢNG
+    //Lắng nghe sự kiện THAY ĐỔI SỐ LƯỢNG
     $(document).on('change', '.cart-qty-update', function () {
         let bookId = $(this).data('id');
         let newQty = parseInt($(this).val());
@@ -953,7 +980,7 @@ $(document).ready(function () {
         }
     });
 
-    // 2. Lắng nghe sự kiện XÓA 1 SẢN PHẨM
+    //Lắng nghe sự kiện XÓA 1 SẢN PHẨM
     $(document).on('click', '.btn-remove-item', function () {
         if (confirm("Bạn có chắc chắn muốn xóa sách này khỏi giỏ hàng?")) {
             let bookId = $(this).data('id');
@@ -968,7 +995,7 @@ $(document).ready(function () {
         }
     });
 
-    // 3. Lắng nghe sự kiện XÓA TẤT CẢ
+    //Lắng nghe sự kiện XÓA TẤT CẢ
     $('#btn-clear-cart').on('click', function () {
         if (confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?")) {
             localStorage.removeItem('cart');
@@ -978,15 +1005,13 @@ $(document).ready(function () {
     });
 });
 
-// ==========================================
-// XỬ LÝ TRANG THANH TOÁN (CHECKOUT)
-// ==========================================
+//method xử lý trang thanh toán
 function renderCheckoutPage() {
-    // 1. Kiểm tra xem có đang ở trang checkout không (dựa vào ID #checkout-items)
+    //Kiểm tra xem có đang ở trang checkout không (dựa vào ID #checkout-items)
     const checkoutContainer = $('#checkout-items');
     if (checkoutContainer.length === 0) return;
 
-    // 2. Lấy giỏ hàng từ LocalStorage
+    //Lấy giỏ hàng từ LocalStorage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // Nếu giỏ trống, báo lỗi và đẩy về trang sách
@@ -999,7 +1024,7 @@ function renderCheckoutPage() {
     let subtotal = 0;
     checkoutContainer.empty(); // Xóa nội dung cũ
 
-    // 3. Render danh sách sản phẩm trong đơn hàng
+    //Render danh sách sản phẩm trong đơn hàng
     cart.forEach(function (item) {
         // Dùng hàm từ data.js để lấy chi tiết sách
         let book = getBookById(item.id);
@@ -1029,7 +1054,7 @@ function renderCheckoutPage() {
         checkoutContainer.append(html);
     });
 
-    // 4. Hàm tính toán và hiển thị các loại phí
+    //Hàm tính toán và hiển thị các loại phí
     function updateCheckoutTotals() {
         // Đọc xem người dùng chọn loại ship nào
         let shippingMethod = $('input[name="shipping"]:checked').val();
@@ -1039,7 +1064,7 @@ function renderCheckoutPage() {
             // Đơn từ 300k miễn phí ship tiêu chuẩn
             shippingFee = subtotal >= 300000 ? 0 : 20000;
         } else if (shippingMethod === 'fast') {
-            shippingFee = 40000; // Giao nhanh cố định 40k
+            shippingFee = 40000;
         }
 
         let grandTotal = subtotal + shippingFee;
@@ -1064,59 +1089,96 @@ function renderCheckoutPage() {
         updateCheckoutTotals();
     });
 
-    // 5. Xử lý sự kiện khi nhấn nút "Đặt hàng"
+    // Xử lý sự kiện khi nhấn nút "Đặt hàng"
     $('#btn-place-order').on('click', function () {
-        // Kiểm tra dữ liệu nhập cơ bản
+        // 1. Thu thập dữ liệu từ các ô input
         const fullName = $('#full-name').val().trim();
         const phone = $('#phone').val().trim();
         const email = $('#email').val().trim();
-        const address = $('#address').val().trim();
-        const province = $('#province').val();
-        const district = $('#district').val().trim();
+        const address = $('#address').val().trim();   // Số nhà, tên đường
+        const province = $('#province').val();        // Tỉnh/Thành
+        const district = $('#district').val().trim(); // Quận/Huyện
+        const ward = $('#ward').val().trim();         // Phường/Xã (Cần thêm ID này vào HTML nếu chưa có)
 
-        // Kiểm tra nếu các ô bắt buộc bị bỏ trống
-        if (!fullName || !phone || !email || !address || !province || !district) {
-            alert("Vui lòng điền đầy đủ các thông tin nhận hàng (những ô có dấu *)!");
+        // 2. ĐỊNH NGHĨA CÁC BỘ LỌC REGEX CHẶT CHẼ
+
+        // Tên: Viết hoa đầu từ, không số, không ký tự lạ, không 2 khoảng trắng
+        const nameRegex = /^[\p{Lu}][\p{Ll}]*(\s[\p{Lu}][\p{Ll}]*)*$/u;
+
+        // SĐT Việt Nam: Bắt đầu bằng 03, 05, 07, 08, 09 và đủ 10 số
+        const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+
+        // Email: Bắt đầu bằng chữ cái, đúng định dạng chuẩn
+        const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        // Địa chỉ (Số nhà/Đường): Chấp nhận chữ, số, dấu xẹt (/), dấu gạch ngang (-)
+        const addressRegex = /^[\p{L}0-9\s/,. -]+$/u;
+
+        // Danh sách Quận/Huyện TPHCM (Để kiểm tra nếu province là TPHCM)
+        const tphcmDistricts = /^(Quận (1|2|3|4|5|6|7|8|9|10|11|12)|Bình Thạnh|Gò Vấp|Phú Nhuận|Tân Bình|Tân Phú|Bình Tân|Thủ Đức|Củ Chi|Hóc Môn|Bình Chánh|Nhà Bè|Cần Giờ)$/i;
+
+        //KIỂM TRA DỮ LIỆU (VALIDATION)
+
+        if (!nameRegex.test(fullName)) {
+            alert("Họ tên không hợp lệ! Vui lòng viết hoa chữ cái đầu (VD: Nguyễn Văn A).");
             return;
         }
 
-        // Tạo mã đơn hàng ngẫu nhiên đẹp mắt (Ví dụ: DH-849204)
-        const orderId = "DH-" + Math.floor(100000 + Math.random() * 900000);
+        if (!phoneRegex.test(phone)) {
+            alert("Số điện thoại không hợp lệ! Phải là số Việt Nam (10 chữ số).");
+            return;
+        }
 
-        // Lấy phương thức thanh toán
+        if (!emailRegex.test(email)) {
+            alert("Email không hợp lệ! (VD: huy@gmail.com).");
+            return;
+        }
+
+        if (!addressRegex.test(address) || address.length < 5) {
+            alert("Địa chỉ số nhà/đường không hợp lệ hoặc quá ngắn!");
+            return;
+        }
+
+        if (province === "Thành phố Hồ Chí Minh" && !tphcmDistricts.test(district)) {
+            alert("Tên Quận/Huyện tại TPHCM không chính xác!");
+            return;
+        }
+
+        if (!ward || ward.length < 2) {
+            alert("Vui lòng nhập tên Phường/Xã hợp lệ!");
+            return;
+        }
+
+        //NẾU MỌI THỨ HỢP LỆ -> TIẾN HÀNH TẠO ĐƠN HÀNG
+        const orderId = "DH-" + Math.floor(100000 + Math.random() * 900000);
         const paymentMethod = $('input[name="payment"]:checked').next('label').text().trim().split('\n')[0];
 
-        // Tạo đối tượng đơn hàng mới
         const newOrder = {
             id: orderId,
             date: new Date().toLocaleDateString('vi-VN'),
             customerName: fullName,
             phone: phone,
-            address: `${address}, ${district}, ${province}`,
+            // Gộp địa chỉ đầy đủ theo mẫu Việt Nam
+            address: `${address}, ${ward}, ${district}, ${province}`,
             items: cart,
-            total: parseInt($('#checkout-total').text().replace(/\D/g, '')), // Lọc lấy số từ chuỗi tổng tiền
-            status: orderStatus.pending, // Trạng thái "Chờ xử lý" lấy từ data.js
+            total: parseInt($('#checkout-total').text().replace(/\D/g, '')),
+            status: orderStatus.pending,
             payment: paymentMethod
         };
 
-        // Lưu đơn hàng vào LocalStorage (vào mảng orders)
+        //LƯU TRỮ VÀ CHUYỂN TRANG
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        orders.unshift(newOrder); // Đẩy đơn hàng mới nhất lên đầu mảng
+        orders.unshift(newOrder);
         localStorage.setItem('orders', JSON.stringify(orders));
 
-        // Xóa sạch giỏ hàng vì đã thanh toán xong
-        localStorage.removeItem('cart');
+        localStorage.removeItem('cart'); // Xóa giỏ hàng
 
-        // Thông báo thành công và chuyển hướng
-        alert(`🎉 Đặt hàng thành công!\nMã đơn hàng của bạn là: ${orderId}\nChúng tôi sẽ sớm liên hệ để giao hàng.`);
-        window.location.href = 'index.html'; // Hoặc chuyển sang trang orders.html nếu bạn đã làm xong
+        alert(`🎉 Đặt hàng thành công!\nMã đơn hàng: ${orderId}`);
+        window.location.href = 'index.html';
     });
 }
 
-// ==========================================
-// XỬ LÝ TRANG DANH SÁCH ĐƠN HÀNG (ORDERS)
-// ==========================================
-
+//method xử lý quản lý trang háo đơn
 function renderOrdersPage() {
     const ordersTable = $('#orders-table');
     if (ordersTable.length === 0) return; // Chỉ chạy nếu đang ở trang orders.html
@@ -1264,9 +1326,7 @@ function renderOrdersPage() {
     renderTable();
 }
 
-// ==========================================
-// XỬ LÝ TRANG CHI TIẾT ĐƠN HÀNG (ORDER DETAIL)
-// ==========================================
+//xử lý trang chi tiết đơn hàng
 function renderOrderDetailPage() {
     // 1. Kiểm tra xem có đang ở trang order-detail không
     const orderIdSpan = $('#order-id');
@@ -1348,9 +1408,7 @@ function renderOrderDetailPage() {
     $('#total-price').text(formatPrice(order.total));
 }
 
-// =====================================================
-// Xử lý hiển thị chi tiết tin tức bằng Modal
-// =====================================================
+//xử lý chi tiết tin tức bằng modal
 function showNewsDetail(newsId) {
     // 1. Tìm tin tức trong mảng newsList (từ data.js)
     const news = newsList.find(item => item.id === newsId);
@@ -1369,52 +1427,4 @@ function showNewsDetail(newsId) {
     } else {
         alert("Không tìm thấy nội dung tin tức này!");
     }
-}
-
-function renderLatestNewsIndex() {
-    const newsContainer = $('#latest-news-container');
-    if (newsContainer.length === 0 || typeof newsList === 'undefined') return;
-
-    // Lấy 3 bài tin tức đầu tiên
-    const latestNews = newsList.slice(0, 3);
-    let html = '';
-
-    latestNews.forEach(news => {
-        html += `
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm overflow-hidden news-card">
-                    <img src="${news.image}" class="card-img-top" alt="${news.title}" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <small class="text-muted">${news.date}</small>
-                        <h5 class="card-title fw-bold mt-2">${news.title}</h5>
-                        <p class="card-text text-muted small">${news.summary.substring(0, 100)}...</p>
-                        <a href="news.html" class="btn btn-outline-primary-custom btn-sm">Đọc tiếp</a>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    newsContainer.html(html);
-}
-function renderAllNewsPage() {
-    const container = $('#news-list'); // ID trong news.html
-    if (container.length === 0) return;
-
-    let html = "";
-    newsList.forEach(news => {
-        html += `
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm news-card">
-                    <img src="${news.image}" class="card-img-top" alt="${news.title}">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">${news.title}</h5>
-                        <p class="text-muted small">${news.summary}</p>
-                        <button class="btn btn-primary btn-sm" onclick="showNewsDetail(${news.id})">Xem chi tiết</button>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-    container.html(html);
 }
